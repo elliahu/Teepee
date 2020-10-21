@@ -1,0 +1,90 @@
+<div class="uk-width-1-1 uk-padding-small uk-padding-remove-top">
+  <h2>Přehled kmenů</h2>
+  <?php if($_SESSION["uzivatel"]->uroven >= SUPERUSER){ ?>
+  <a href="#pridat-kmen" class="btn-green" uk-toggle>Přidat kmen</a>
+  <?php } ?>
+</div>
+<div class="uk-width-1-1 uk-padding-small ">
+    <div class=" uk-overflow-auto">
+      <table class="data-tables uk-table uk-table-striped">
+        <thead>
+            <tr>
+              <th>Název</th>
+              <th>Věk</th>
+              <th>Popis</th>
+              <th>Vedoucí</th>
+              <th>Akce</th>
+            </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($kmeny as $kmen) {
+            ?>
+            <tr>
+              <td>
+                <?= $kmen["nazev"] ?>
+              </td>
+              <td>
+                <?= $kmen["min_vek"]." - ".$kmen["max_vek"] ?>
+              </td>
+              <td>
+                <?= $kmen["popis"] ?>
+              </td>
+              <td>
+                <?php
+                  $vedouci = DB::vsichniVedouci($kmen["nazev"]);
+                  foreach($vedouci as $v){
+                    echo "<a href='/profil/".$v["id_vedouciho"]."' class='uk-link-text'>".$v["jmeno"]." ".$v["prijmeni"]."</a><br>";
+                  }
+                 ?>
+              </td>
+              <!-- Ověření zda má vedoucí dostatečná oprávnění -->
+              <?php if($_SESSION["uzivatel"]->uroven >= ADMIN){ ?>
+                <td>
+                  <a class='uk-link-muted' href='/kmeny/upravit/<?=$kmen["id_kmenu"]?>'><span uk-icon="pencil"></span></a>
+                  <a class='uk-link-muted' href='/kmeny/smazat/<?=$kmen["id_kmenu"]?>' onclick="return confirm('Opravdu chceš smazat tento záznam ?')"><span uk-icon="trash"></span></a>
+                </td>
+              <?php }
+              else{
+              ?>
+              <td>
+                <a class='uk-link-muted' href='/kmeny/upravit/<?=$kmen["id_kmenu"]?>'><span uk-icon="pencil"></span></a>
+              </td>
+            <?php } ?>
+
+            </tr>
+            <?php
+          }
+          ?>
+        </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="pridat-kmen" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <h2 class="uk-modal-title">Nový kmen</h2>
+        <form class="" method="post">
+          <div class="uk-margin-small">
+            <label for="datum">Název kmenu</label>
+            <input class="uk-input" id="nazev" type="text" name="nazev">
+          </div>
+          <div class="uk-margin-small">
+            <label for="popis">Minimální věk</label>
+            <input class="uk-input" id="min_vek" type="number" name="min_vek">
+          </div>
+          <div class="uk-margin-small">
+            <label for="popis">Maximální věk</label>
+            <input class="uk-input" id="max_vek" type="number" name="max_vek">
+          </div>
+          <div class="uk-margin-small">
+            <label for="popis">Popis kmenu</label>
+            <input class="uk-input" id="popis" type="text" name="popis">
+          </div>
+          <p class="uk-text-right">
+              <button class="btn-blue uk-modal-close" type="button">Zrušit</button>
+              <input type="submit" class="btn-green" name="pridat-kmen" value="Přidat">
+          </p>
+        </form>
+
+    </div>
+</div>

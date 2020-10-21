@@ -1,0 +1,109 @@
+<div uk-grid>
+  <div class="uk-width-1-2 uk-text-right uk-padding">
+    <h1 class="uk-margin-remove"><?= $datum[0] ?></h1>
+    <h3 class="uk-margin-remove"><?= $datum[1] ?></h3>
+  </div>
+  <div class="uk-width-1-2 uk-text-left uk-padding">
+    <h1 class="uk-margin-remove uk-heading-medium" id="ct"></h1>
+    <script type="text/javascript">
+      function updateClock() {
+        var now = new Date();
+        if (now.getMinutes() < 10)
+          var time = now.getHours() + ':' + "0" + now.getMinutes();
+        else
+          var time = now.getHours() + ':' + now.getMinutes();
+        document.getElementById('ct').innerHTML = time;
+        setTimeout(updateClock, 1000);
+      }
+      updateClock();
+    </script>
+
+  </div>
+</div>
+<div class="uk-width-3-5@l uk-width-1-1@m uk-margin-auto uk-padding-small uk-padding-remove-bottom">
+  <div class="uk-width-1-1 uk-padding uk-padding-remove-horizontal uk-padding-remove-top">
+    <?php if ($streda === false) { ?>
+      <h1>Na středu <?= $stredaDatum ?>
+        nebyla přidána schůzka</h1>
+      <a class="btn-blue" href="/schuzky/quick"><span uk-icon="icon: plus; ratio: 1"></span> Přidat</a>
+    <?php } ?>
+    <?php if ($streda !== false) { ?>
+      <h1>Nejbližší schůzka: <?= date_format(date_create($nejblizsiSchuzka[0]["datum"]), "j.n.") ?></h1>
+      <?php
+      $NejSchuzka = DB::nejblizsiSchuzka();
+      ?>
+      <a class="btn-green" href="/dochazka/<?= $_SESSION["uzivatel"]->id_kmenu ?>/<?= $NejSchuzka[0]["id_schuzky"] ?>"><span uk-icon="icon: plus; ratio: 1"></span> Zapsat body</a>
+    <?php } ?>
+  </div>
+  <div class="uk-grid-match uk-child-width-expand@s uk-text-center" uk-grid>
+    <div class="uk-animation-slide-bottom-small">
+      <a href="/dochazka">
+        <div class="uk-border-rounded uk-card-body green-gradient uk-light">
+          <span uk-icon="icon: calendar; ratio: 4"></span>
+          <h2 class="uk-margin-remove"> Docházka</h2>
+        </div>
+      </a>
+    </div>
+    <div class="uk-animation-slide-bottom-small">
+      <a href="/schuzky">
+        <div class="uk-border-rounded uk-card-body green-gradient uk-light">
+          <span uk-icon="icon: location; ratio: 4"></span>
+          <h2 class="uk-margin-remove"> Schůzky</h2>
+        </div>
+      </a>
+    </div>
+    <div class="uk-animation-slide-bottom-small">
+      <a href="/statistika">
+        <div class="uk-border-rounded uk-card-body green-gradient uk-light">
+          <span uk-icon="icon: info; ratio: 4"></span>
+          <h2 class="uk-margin-remove"> Statistika</h2>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="uk-width-1-1 uk-padding uk-padding-remove-left uk-padding-remove-right uk-animation-slide-bottom-small">
+    <div id="prechody" class="uk-padding-top">
+      <div class="uk-grid-match uk-child-width-expand@s" uk-grid>
+        <div>
+          <!-- <div class="response"></div>
+          <button onclick="testAPI(xmlhttp)">Test API</button>
+          <script>
+            var xmlhttp = new XMLHttpRequest(); 
+            xmlhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                document.querySelector('.response').innerHTML = this.responseText;
+              }
+              if (this.status == 404){
+                document.querySelector('.response').innerHTML = this.status;
+              }
+            };
+
+            function testAPI(xmlhttp) {
+              xmlhttp.open("POST", "/api/kmen?token=<?= $config->apiToken ?>");
+              xmlhttp.setRequestHeader("Content-Type", "application/json");
+              xmlhttp.send(JSON.stringify([["id_kmenu",1]]));
+            }
+          </script> -->
+          
+        </div>
+        <div>
+          <h3>Narozeniny v tomto týdnu</h3>
+          <?php if ($zadneNarozeniny) {
+            foreach ($narozeniny as $n) { ?>
+              <div class="uk-padding-small uk-width-1-1 orange2-gradient uk-margin-small uk-margin-remove-left uk-margin-remove-right uk-border-rounded uk-light" uk-grid>
+                <div class="uk-width-auto@s uk-padding-remove">
+                  <p><b><?= $n["jmeno"] . " " . $n["prijmeni"] ?> - </b> <?= date("d.m.", strtotime($n["datum_narozeni"])) ?> </p>
+                </div>
+                <div class="uk-width-expand@s uk-text-left">
+                  <p><b><?= $n["vek"] ?> let <span uk-icon="chevron-right"></span> <?= $n["vek"] + 1 ?> let</b></p>
+                </div>
+              </div>
+            <?php }
+          } else { ?>
+            <p>Žádné narozeniny v tomto týdnu</p>
+          <?php } ?>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

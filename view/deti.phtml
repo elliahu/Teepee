@@ -1,0 +1,72 @@
+<div class="uk-width-1-1 uk-padding-small uk-padding-remove-top">
+  <h2>Přehled dětí</h2>
+  <?php if($_SESSION["uzivatel"]->uroven >= SUPERUSER){ ?>
+  <a href="/deti/novy" class="btn-green" uk-toggle>Přidat dítě</a>
+  <?php } ?>
+</div>
+<div class="uk-width-1-1 uk-padding-small ">
+    <p class="uk-margin-remove">Filtrovat podle kmenu:</p>
+    <a href="/deti" class="btn-orange">Vše</a>
+
+    <?php
+      $kmeny = DB::vsechnyKmeny();
+      foreach ($kmeny as $kmen) {
+        echo "<a href='/deti/sort/".$this->reverseCamelCase($kmen["nazev"])."'
+        class='btn-orange'>".$kmen["nazev"]."</a>";
+      }
+    ?>
+    <div class=" uk-overflow-auto">
+      <table class="data-tables uk-table uk-table-striped">
+        <thead>
+            <tr>
+                <th>Jméno</th>
+                <th>Přezdívka</th>
+                <th>Příjmení</th>
+                <th>Datum narození</th>
+                <th>Kontaktní email</th>
+                <th>Kontaktní telefon</th>
+                <th>Body</th>
+                <th>Kmen</th>
+                <th>Akce</th>
+            </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($deti as $dite): ?>
+            <tr>
+              <td>
+                <?php echo "<a class='uk-link-text' href='/profil-dite/".$dite["id_rangera"]."'>".$dite["jmeno"]."</a>"; ?>
+              </td>
+              <td>
+                <?= $dite["prezdivka"]; ?>
+              </td>
+              <td>
+                <?= $dite["prijmeni"]; ?>
+              </td>
+              <td>
+                <?= date("j.n. Y", strtotime($dite["datum_narozeni"])); ?>
+              </td>
+              <td>
+                <?= $dite["kontaktni_email"]; ?>
+              </td>
+              <td>
+                <?= $dite["kontaktni_tel"]; ?>
+              </td>
+              <td>
+                <?php echo "<a class='uk-link-text' href='/body/'>".$dite["pocet_bodu"]."</a>"; ?>
+              </td>
+              <td>
+                <?= $dite["nazev"]; ?>
+              </td>
+              <td>
+                  <a class='uk-link-muted' href='/profil-dite/<?=$dite["id_rangera"]?>'><span uk-icon="user"></span></a>
+                  <?php if($_SESSION["uzivatel"]->uroven >= ADMIN) {
+                    ?>
+                      <a class='uk-link-muted' href='/deti/smazat/<?=$dite["id_rangera"]?>' onclick="return confirm('Opravdu chceš smazat tento záznam ?')"><span uk-icon="trash"></span></a>
+                  <?php } ?>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+    </table>
+  </div>
+</div>

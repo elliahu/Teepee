@@ -1,0 +1,94 @@
+<div class="uk-width-1-1 uk-padding-small uk-padding-remove-top">
+  <h2>Přehled vedoucích</h2>
+  <?php if($_SESSION["uzivatel"]->uroven >= SUPERUSER){ ?>
+  <a href="/vedouci/novy" class="btn-green" uk-toggle>Přidat vedoucího</a>
+  <?php } ?>
+</div>
+<div class="uk-width-1-1 uk-padding-small ">
+    <p class="uk-margin-remove">Filtrovat podle kmenu:</p>
+    <a href="/vedouci" class="btn-orange">Vše</a>
+
+    <?php
+      $kmeny = DB::vsechnyKmeny();
+      foreach ($kmeny as $kmen) {
+        echo "<a href='/vedouci/sort/".$this->reverseCamelCase($kmen["nazev"])."'
+        class='btn-orange'>".$kmen["nazev"]."</a>";
+      }
+    ?>
+    <div class=" uk-overflow-auto">
+      <table class="data-tables uk-table uk-table-striped">
+        <thead>
+            <tr>
+                <!--<th>ID</th> -->
+                <th>Jméno</th>
+                <th>Přezdívka</th>
+                <th>Příjmení</th>
+                <th>Datum narození</th>
+                <th>Email</th>
+                <th>Telefon</th>
+                <th>Kmen</th>
+                <th>Akce</th>
+            </tr>
+
+        </thead>
+        <tbody>
+          <?php foreach ($vedouci as $v): ?>
+            <tr>
+              <!--<td>
+                <?php
+                $id =  $v["id_vedouciho"];
+                echo "<a class='uk-link-text' href='/profil/$id'>$id</a>"
+                 ?>
+              </td> -->
+              <td>
+                <?php
+                $jmeno = $v["jmeno"];
+                echo "<a class='uk-link-text' href='/profil/$id'>$jmeno</a>"
+                ?>
+              </td>
+              <td>
+                <?php echo $v["prezdivka"] ?>
+              </td>
+              <td>
+                <?php echo $v["prijmeni"] ?>
+              </td>
+              <td>
+                <?php
+                 $datNar = $v["datum_narozeni"];
+                 echo date("d.m. Y", strtotime($datNar));
+                ?>
+              </td>
+              <td>
+                <?php
+                  $email =  $v["email"] ;
+                  echo "<a class='uk-link-text' href='mailto: ".$email."'>".$email."</a>";
+                ?>
+              </td>
+              <td>
+                <?php
+                  $tel = $v["tel"];
+                  echo "<a class='uk-link-text' href='tel: ".$tel."'>".$tel."</a>";
+                ?>
+              </td>
+              <td>
+                <?php
+                  echo $v["nazev"];
+                  /*$kmenA = $this->reverseCamelCase($kmen);
+                  echo "<a class='uk-link-text' href='/vedouci/sort/".$kmenA."'>".$kmen."</a>";*/
+                ?>
+              </td>
+              <td>
+                <a class='uk-link-muted' href='/profil/<?=$id?>'><span uk-icon="user"></span></a>
+              <?php if($_SESSION["uzivatel"]->uroven >= ADMIN) {
+                ?>
+                  <a class='uk-link-muted' href='/vedouci/smazat/<?=$id?>' onclick="return confirm('Opravdu chceš smazat tento záznam ?')"><span uk-icon="trash"></span></a>
+              <?php
+
+              }?>
+            </td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+    </table>
+  </div>
+</div>

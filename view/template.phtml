@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+  <?php require_once("template-head.inc.phtml"); ?>
+</head>
+
+
+<body id="body" class=" uk-height-1-1 uk-background-cover <?= $user_config->ui->theme ?> " style="background-image: url(/view/img/<?= $user_config->ui->theme ?>.jpg);">
+  <script>
+    $(document).ready(function() {
+      $('.data-tables').DataTable({
+        "language": {
+          "lengthMenu": "Zobrazit _MENU_ záznamů na stránku",
+          "zeroRecords": "Nic nenalezeno",
+          "info": "Stránka _PAGE_ z _PAGES_",
+          "infoEmpty": "Žádné záznamy",
+          "infoFiltered": "(filtrováno _MAX_ záznamů)",
+          "search": "Hledat",
+          "paginate": {
+            "previous": "Předchozí",
+            "next": "Následující"
+          }
+        },
+        "pagingType": "simple",
+        "bSort": false,
+        "pageLength": 50
+      });
+    });
+  </script>
+
+  <?php
+  // Alert systém
+  if (!empty($zpravy)) {
+    foreach ($zpravy as $zprava) {
+  ?>
+      <div id="<?php if ($zprava["typ"] != "default" && $zprava["typ"] != "error") echo "alertbox" ?>" class="<?= "uk-alert-" . $zprava["typ"] ?> uk-position-large uk-position-top-center uk-overlay uk-padding uk-border-rounded" uk-alert style="z-index:1000">
+        <a class="uk-alert-close" uk-close></a>
+        <p><?= $zprava["zprava"] ?></p>
+      </div>
+  <?php
+    }
+  }
+  ?>
+
+  <?php
+  // Zjišťuje, na jaké stránce se nachází uživatel a podle toho zobrazí ovládací prvky
+  $url = $_SERVER["REQUEST_URI"];
+  $castiURL = explode("/", $url);
+  $page = strtolower(str_replace("-", "", $castiURL[1]));
+
+  if ($page == "login") {
+    $show = false;
+  } else {
+    $show = true;
+  }
+  ?>
+
+
+
+  <div class="uk-width-1-1 uk-margin-remove topbar boundary" style="" uk-grid>
+    <div class="uk-width-1-1 uk-padding-small uk-padding-remove-top uk-padding-remove-bottom topbar-gradient uk-margin-remove" uk-grid>
+      
+      <div class="uk-width-expand uk-padding-small">
+        <?php if ($show) : ?>
+          <a uk-toggle="target: #offcanvas-flip" class="menu-hamburger uk-padding-small uk-padding-remove-top uk-padding-remove-left uk-padding-remove-bottom"><span uk-icon="icon: table; ratio: 2"></span></a>
+        <?php endif; ?>
+      </div>
+
+      <div class="uk-visible@m uk-width-expand uk-padding-remove">
+        <a href="/nastenka">
+          <img class=" uk-align-center uk-margin-remove-bottom" src="/view/img/teepee-text-logo-beta.png" alt="Royal Rangers" style="max-height:70px;">
+        </a>
+      </div>
+
+      <div class="uk-text-right uk-width-expand uk-padding-small">
+        <?php if (isset($_SESSION["uzivatel"])) { ?>
+          <a class="user-hamburger">
+            <span uk-icon="icon: comment; ratio: 2"></span>
+          </a>
+          <div uk-drop="mode: click;pos: bottom-right" style="left:0px;">
+            <div class="uk-background-default uk-border-rounded uk-text-left border uk-padding-small">
+              <div class="uk-width-1-1 uk-overflow-auto uk-height-large">
+                <p class="uk-margin-remove"><b>Historie upozornění</b></p>
+                <?php $zpravy = array_reverse($_SESSION["historie_zprav"]); ?>
+                <?php foreach ($zpravy as $zprava) { ?>
+                  <div class="uk-alert-<?= $zprava["typ"] ?>" uk-alert>
+                    <span class="uk-text-small"><?= $zprava["cas"] ?></span>
+                    <p class="uk-margin-remove-top"><?= $zprava["zprava"] ?></p>
+                  </div>
+                <?php } ?>
+              </div>
+            </div>
+          </div>
+          <a class="user-hamburger">
+            <span uk-icon="icon: user; ratio: 2" class="uk-margin-left"></span>
+          </a>
+          <div uk-drop="mode: click;boundary: .boundary;">
+            <div class="uk-background-default uk-border-rounded uk-text-left border uk-padding-small">
+              <div class="uk-width-1-1">
+                <ul class="uk-nav uk-nav-default">
+                  <p class="uk-margin-remove"><b><?= $_SESSION["uzivatel"]->jmeno . " " . $_SESSION["uzivatel"]->prijmeni ?></b></p>
+                  <em><?= $_SESSION["uzivatel"]->kmen->nazev ?></em>
+                  <li><a href="/profil/<?= $_SESSION["uzivatel"]->id_vedouciho ?>"><span uk-icon="icon: user"></span> Profil</a></li>
+                  <li><a href="/uzivatelske-nastaveni"><span uk-icon="icon: cog"></span> Uživatelské nastavení</a></li>
+                  <li><a href="/logout"><span uk-icon="icon: sign-out"></span> Odhlásit se</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        <?php } ?>
+      </div>
+
+    </div>
+
+
+    <div class="uk-width-1-1 uk-padding-small uk-margin-remove">
+      <?php $this->kontroler->vypisPohled(); ?>
+    </div>
+
+    <?php if ($show) : ?>
+  </div>
+  <!-- offcanvas menu -->
+  <div id="offcanvas-flip" uk-offcanvas="flip: false; overlay: true; mode: push;">
+    <div class="uk-offcanvas-bar orca-gradient">
+      <button class="uk-offcanvas-close" type="button" uk-close></button>
+      <?php require_once("aside-menu.inc.phtml"); ?>
+
+      <div class="uk-padding-small uk-text-small uk-position-bottom-left uk-text-muted">v. 0.6.6 beta</div>
+      <div class="uk-padding-small uk-text-small uk-position-bottom-right ">
+        <a class="uk-link-muted" href="http://matejelias.cz">© Matěj Eliáš</a>
+      </div>
+    </div>
+  </div>
+<?php endif; ?>
+
+<!-- Cookie popup -->
+<div id="cookie-banner" class="uk-padding uk-background-muted uk-position-bottom uk-position-fixed uk-animation-slide-bottom">
+  <div class="uk-width-1-1 uk-margin-remove" uk-grid>
+  <div class="uk-width-auto">
+    <span>Aplikace Teepee ke svému chodu a analýze provozu využívá cookies. Používáním aplikace souhlasíte s použitím cookies. <!--<a href="#"><u>Chvi vědět více</u></a>--></span>
+  </div>
+  <div class="uk-width-expand uk-text-right">
+    <button id="cookie-accept" class="btn-green" onclick="acceptCookies()">Rozumím</button>
+  </div>
+  </div>
+</div>
+
+<?php require_once("template-scripts.inc.phtml"); ?>
+</body>
+
+</html>

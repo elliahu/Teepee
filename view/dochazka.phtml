@@ -1,0 +1,199 @@
+<div class="uk-width-1-1">
+  <h1>Zapsat body <?php
+  if($vybranaSchuzka != null){
+    echo date("j.n.",strtotime($vybranaSchuzka["datum"]));
+    if (date("Y-m-d",strtotime($vybranaSchuzka["datum"])) == date("Y-m-d",strtotime("next Wednesday")))
+      echo " (Příští středa)";
+    if (date("Y-m-d",strtotime($vybranaSchuzka["datum"])) == date("Y-m-d",strtotime("now")))
+      echo " (Dnes)";
+  }
+  ?></h1>
+  <?php
+    if($deti === null){
+      ?>
+      <div class="uk-alert-primary" uk-alert>
+        <p>Vyberte kmen</p>
+      </div>
+      <?php
+    }
+    foreach($vsechnyKmeny as $kmen){
+      if($kmen["nazev"] == $vybranyKmen["nazev"])
+        echo "<a href='/dochazka/".$kmen["id_kmenu"]."' class='btn-green'>".$kmen["nazev"]."</a>";
+      else
+        echo "<a href='/dochazka/".$kmen["id_kmenu"]."' class='btn-orange'>".$kmen["nazev"]."</a>";
+    }
+    ?>
+    <?php
+    if(($deti !== null) && ($vybranaSchuzka === null)){
+
+   ?>
+   <div class="uk-alert-primary" uk-alert>
+     <p>Vyberte schůzku</p>
+   </div>
+     <h4>Schůzka:</h4>
+     <div class="uk-width-1-4@m">
+       <!-- Spravce -->
+       <!-- Vyber schuzky -->
+       <ul class="uk-list uk-list-divider uk-overflow-auto">
+         <?php foreach ($vsechnySchuzky as $schuzka): ?>
+           <li class="">
+                <a href="/dochazka/<?= $IDkmenu ?>/<?= $schuzka["id_schuzky"]?>">
+                       <?php
+                       echo date("d.m. Y",strtotime($schuzka["datum"]));
+                       if (date("Y-m-d",strtotime($schuzka["datum"])) == date("Y-m-d",strtotime("next Wednesday")))
+                         echo "<br>(Příští středa)";
+                       if (date("Y-m-d",strtotime($schuzka["datum"])) == date("Y-m-d",strtotime("now")))
+                         echo "<br>(Dnes)"; ?>
+                 </a>
+           </li>
+         <?php endforeach; ?>
+       </ul>
+     </div>
+
+   <?php }?>
+   <?php
+   if(($deti !== null) &&( $vybranaSchuzka !== null) && ($upravy === false)){
+
+  ?>
+
+
+
+    <h4>Schůzka:</h4>
+    <div uk-grid>
+      <div class="uk-width-1-4@m">
+        <!-- Zapis bodu -->
+        <!-- Vyber schuzky -->
+        <ul class="uk-list uk-list-divider uk-overflow-auto uk-height-max-large">
+          <?php foreach ($vsechnySchuzky as $schuzka): ?>
+            <li class="">
+                 <a href="/dochazka/<?= $IDkmenu ?>/<?= $schuzka["id_schuzky"]?>">
+                        <?php
+                        echo date("d.m. Y",strtotime($schuzka["datum"]));
+                        if (date("Y-m-d",strtotime($schuzka["datum"])) == date("Y-m-d",strtotime("next Wednesday")))
+                          echo "<br>(Příští středa)";
+                        if (date("Y-m-d",strtotime($schuzka["datum"])) == date("Y-m-d",strtotime("now")))
+                          echo "<br>(Dnes)"; ?>
+                  </a>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+    <div class="uk-width-3-4@m">
+     <form class="uk-form" method="post">
+       <input type="hidden" name="schuzka" value="<?= $vybranaSchuzka["id_schuzky"] ?>">
+     <table class="uk-table uk-table-striped uk-width-1-1">
+       <?php foreach ($deti as $dite): ?>
+         <tr>
+           <td>
+             <?= $dite["jmeno"]." ".$dite["prijmeni"]?>
+           </td>
+           <td>
+             <a onclick="minus('d-<?= $dite["id_rangera"] ?>')" class="uk-icon-link" uk-icon="minus"></a>
+             <input class="uk-input uk-form-width-small" type="number" name="d-<?= $dite["id_rangera"] ?>" value="0" id="d-<?= $dite["id_rangera"] ?>">
+             <a onclick="plus('d-<?= $dite["id_rangera"] ?>')" class="uk-icon-link" uk-icon="plus"></a>
+           </td>
+           <td>
+             <label class="uk-margin-right"><input onclick="pritomen('d-<?= $dite["id_rangera"] ?>')" class="uk-radio" type="radio" name="o-<?= $dite["id_rangera"] ?>" value="pritomen" > Přítomen </label>
+             <label class="uk-margin-right"><input onclick="pozde('d-<?= $dite["id_rangera"] ?>')" class="uk-radio" type="radio" name="o-<?= $dite["id_rangera"] ?>" value="pritomen-pozde"> Pozdě </label>
+             <label class="uk-margin-right"><input onclick="omluven('d-<?= $dite["id_rangera"] ?>')" class="uk-radio" type="radio" name="o-<?= $dite["id_rangera"] ?>" value="omluven"> Omluven </label>
+             <label class="uk-margin-right"><input onclick="chybi('d-<?= $dite["id_rangera"] ?>')" class="uk-radio" type="radio" name="o-<?= $dite["id_rangera"] ?>" value="neomluven" checked> Chybí </label>
+           </td>
+         </tr>
+       <?php endforeach; ?>
+     </table>
+     <input class="btn-orange" type="submit" name="body" value="Uložit">
+     </form>
+  </div>
+</div>
+<?php }?>
+
+<?php if(($deti !== null) && ($vybranaSchuzka !== null) && ($upravy === true)){ // <-- tato část slouží k úpravám existujících záznamů?>
+<h4>Schůzka:</h4>
+  <div uk-grid>
+        <div class="uk-width-1-4@m">
+          <!-- Zapis bodu -->
+          <!-- Vyber schuzky -->
+          <ul class="uk-list uk-list-divider uk-overflow-auto uk-height-max-large">
+            <?php foreach ($vsechnySchuzky as $schuzka): ?>
+              <li class="">
+                   <a href="/dochazka/<?= $IDkmenu ?>/<?= $schuzka["id_schuzky"]?>">
+                          <?php
+                          echo date("d.m. Y",strtotime($schuzka["datum"]));
+                          if (date("Y-m-d",strtotime($schuzka["datum"])) == date("Y-m-d",strtotime("next Wednesday")))
+                            echo "<br>(Příští středa)";
+                          if (date("Y-m-d",strtotime($schuzka["datum"])) == date("Y-m-d",strtotime("now")))
+                            echo "<br>(Dnes)"; ?>
+                    </a>
+              </li>
+            <?php endforeach; ?>
+          </ul>
+        </div>
+    <div class="uk-width-3-4@m">
+     <form class="uk-form" method="post">
+       <input type="hidden" name="schuzka" value="<?= $vybranaSchuzka["id_schuzky"] ?>">
+     <table class="uk-table uk-table-striped uk-width-1-1">
+       <?php foreach ($zapsaneBody as $body): ?>
+         <tr>
+           <td>
+             <?= $body["jmeno"]." ".$body["prijmeni"]?>
+           </td>
+           <td>
+             <a onclick="minus('d-<?= $body["id_rangera"] ?>')" class="uk-icon-link" uk-icon="minus"></a>
+             <input class="uk-input uk-form-width-small" type="number" name="d-<?= $body["id_rangera"] ?>" value="<?= $body["body"] ?>" id="d-<?= $body["id_rangera"] ?>">
+             <a onclick="plus('d-<?= $body["id_rangera"] ?>')" class="uk-icon-link" uk-icon="plus"></a>
+           </td>
+           <td>
+             <label class="uk-margin-right"><input onclick="pritomen('d-<?= $body["id_rangera"] ?>')" class="uk-radio" type="radio" name="o-<?= $body["id_rangera"] ?>" value="pritomen" <?php if($body["stav"] == "pritomen") echo "checked"; ?>> Přítomen </label>
+             <label class="uk-margin-right"><input onclick="pozde('d-<?= $body["id_rangera"] ?>')" class="uk-radio" type="radio" name="o-<?= $body["id_rangera"] ?>" value="pritomen-pozde"<?php if($body["stav"] == "pritomen-pozde") echo "checked"; ?>> Pozdě </label>
+             <label class="uk-margin-right"><input onclick="omluven('d-<?= $body["id_rangera"] ?>')" class="uk-radio" type="radio" name="o-<?= $body["id_rangera"] ?>" value="omluven" <?php if($body["stav"] == "omluven") echo "checked"; ?>> Omluven </label>
+             <label class="uk-margin-right"><input onclick="chybi('d-<?= $body["id_rangera"] ?>')" class="uk-radio" type="radio" name="o-<?= $body["id_rangera"] ?>" value="neomluven" <?php if($body["stav"] == "neomluven") echo "checked"; ?>> Chybí </label>
+           </td>
+
+         </tr>
+       <?php endforeach; ?>
+     </table>
+     <input class="btn-green" type="submit" name="uprav-body" value="Uložit">
+     </form>
+    </div>
+</div>
+<?php } ?>
+
+</div>
+
+
+
+
+
+<script>
+
+function omluven(id){
+  var input = document.getElementById(id);
+  if(input.value == <?= $config->body->schuzka->omluven ?>)
+    input.value = 0;
+  else
+    input.value = <?= $config->body->schuzka->omluven ?>;
+}
+function pritomen(id){
+  var input = document.getElementById(id);
+    input.value = <?= $config->body->schuzka->pritomen ?>;
+}
+function pozde(id){
+  var input = document.getElementById(id);
+  input.value = <?= $config->body->schuzka->pozde ?>;
+}
+function chybi(id){
+  var input = document.getElementById(id);
+    input.value = <?= $config->body->schuzka->neomluven ?>;
+}
+function plus(id){
+  var input = document.getElementById(id);
+  input.value++;
+}
+function minus(id){
+  var input = document.getElementById(id);
+  if(input.value != 0)
+    input.value--;
+}
+
+
+</script>

@@ -1,0 +1,124 @@
+<div class="uk-padding-small uk-width-3-5@l uk-margin-auto" uk-grid>
+    <div class="uk-width-1-1">
+        <h1>Uživatelské nastavení</h1>
+    </div>
+    <div class="uk-width-auto@m">
+        <ul class="uk-tab-left" uk-tab="connect: #component-tab-left; animation: uk-animation-fade">
+            <li><a href="#">Aplikace</a></li>
+        </ul>
+    </div>
+    <div class="uk-width-expand@m">
+        <ul id="component-tab-left" class="uk-switcher">
+            <li>
+                <form method="post">
+                    <h2>Uživatelské rozhraní</h2>
+                    <p>Vyberte režim aplikace:</p>
+                    <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                        <label><input class="uk-radio" type="radio" name="theme" value="uk-dark" <?php if ($user_config->ui->theme == "uk-dark") echo "checked" ?>> Light</label>
+                        <label><input class="uk-radio" type="radio" name="theme" value="uk-light" <?php if ($user_config->ui->theme == "uk-light") echo "checked" ?> disabled> Dark (již brzy)</label>
+                    </div>
+                    <h2>Upozornění</h2>
+                    <!--
+                    <p>Zobrazovat uozornění:</p>
+                    <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                        <label><input class="uk-radio" type="radio" name="zobrazovat" value="true" <?php if ($user_config->upozorneni->zobrazovat == "true") echo "checked" ?>> Zobrazovat</label>
+                        <label><input class="uk-radio" type="radio" name="zobrazovat" value="false" <?php if ($user_config->upozorneni->zobrazovat == "false") echo "checked" ?> onclick="return confirm('Nebudou se zobrazovat ŽÁDNÉ upozornění. To znamená že se nezobrazí ani chyby. Opravdu to chcete udělat ?')"> Nezobrazovat</label>
+                    </div> -->
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="zacatek">Skrýt upozornění po</label>
+                        <div class="uk-form-controls">
+                            <input class="uk-input uk-form-width-small" type="number" placeholder="vteřiny" name="cas" value="<?= $user_config->upozorneni->skrytPo ?>">
+                            <span> vteřinách</span>
+                        </div>
+                    </div>
+                    <input class="btn-green" type="submit" name="zmenit_nastaveni" value="Uložit">
+                </form>
+                <hr class="uk-divider-small">
+                <div class="uk-width-1-1">
+                    <h2>Nastavení účtu</h2>
+                    <ul uk-accordion>
+                        <li class="">
+                            <a class="uk-accordion-title" href="#">Změnit uživatelské jméno</a>
+                            <div class="uk-accordion-content uk-background-muted uk-padding-small">
+                                <p>Uživatelské jméno musí být unikátní a nesmí obsahovat speciální znaky jako &lt; &gt; &quot; &apos; ě š č ř atd.. <br>Délka může být maximálně 20 znaků.</p>
+                                <a href="#zmena-jmena" class="btn-orange" uk-toggle>Změnit</a>
+                            </div>
+                        </li>
+                        <li>
+                            <a class="uk-accordion-title" href="#">Změnit heslo</a>
+                            <div class="uk-accordion-content uk-background-muted uk-padding-small">
+                                <p>Heslo musí mít alespoň 8 znaků (maximálně 20). Musí obsahovat číslice a malá a velká písmena.<br> Např.: Heslo123</p>
+                                <a href="#zmena-hesla" class="btn-orange" uk-toggle>Změnit</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                
+            </li>
+
+        </ul>
+    </div>
+</div>
+
+<div id="zmena-jmena" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <h2 class="uk-modal-title">Změna uživatelského jména</h2>
+
+        <form method="post" class="uk-form">
+            <div class="uk-margin">
+                <input class="uk-input" type="text" placeholder="Uživatelské jméno" value="<?= $_SESSION['uzivatel']->login ?>" name="jmeno" required>
+            </div>
+
+
+            <p class="uk-text-right">
+                <a class="btn-green uk-modal-close" type="button">Zrušit</a>
+                <input class="btn-orange" type="submit" name="zmenit-jmeno" value="Uložit">
+            </p>
+        </form>
+    </div>
+</div>
+<div id="zmena-hesla" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <h2 class="uk-modal-title">Změna hesla</h2>
+        <form method="post" class="uk-form">
+            <div class="uk-margin">
+                <input class="uk-input" type="password" placeholder="Staré heslo" name="stare_heslo">
+            </div>
+            <div class="uk-margin">
+                <input class="uk-input" type="password" placeholder="Nové heslo" name="nove_heslo" id="heslo1" oninput="testujHesla()">
+            </div>
+            <div class="uk-margin">
+                <input class="uk-input" type="password" placeholder="Nové heslo znovu" name="nove_heslo_znovu" id="heslo2" oninput="testujHesla()">
+            </div>
+            <div class="uk-alert-success" uk-alert id="correct" style="display:none;">
+                <p>Hesla jsou stejná</p>
+            </div>
+            <div class="uk-alert-danger" uk-alert id="wrong" style="display:none;">
+                <p>Hesla nejsou stejná !</p>
+            </div>
+            <p class="uk-text-right">
+                <a class="btn-green uk-modal-close" type="button">Zrušit</a>
+                <input class="btn-orange" type="submit" name="zmenit-heslo" value="Uložit">
+            </p>
+
+        </form>
+    </div>
+</div>
+
+
+<script>
+    function testujHesla() {
+        var heslo1 = document.getElementById("heslo1").value;
+        var heslo2 = document.getElementById("heslo2").value;
+
+        if (heslo1 == heslo2) {
+            document.getElementById("correct").style.display = "block";
+            document.getElementById("wrong").style.display = "none";
+        } else {
+            document.getElementById("correct").style.display = "none";
+            document.getElementById("wrong").style.display = "block";
+        }
+    }
+</script>

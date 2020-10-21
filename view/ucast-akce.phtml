@@ -1,0 +1,122 @@
+<div class="uk-width-1-1" uk-grid>
+  <div class="uk-width-1-1">
+    <h1>Účast na akci <?php if (isset($vybranaAkce) && $vybranaAkce != null) echo " - " . $vybranaAkce["nazev"] . " (" . date("d.m.", strtotime($vybranaAkce["zacatek"])) . " - " . date("d.m.", strtotime($vybranaAkce["konec"])) . ")"; ?></h1>
+    <?php if (!isset($vybranaAkce) || $vybranaAkce == null) { ?>
+    <div class="uk-alert-primary" uk-alert>
+      <p>Vyberte akci</p>
+    </div>
+    <?php } ?> 
+  </div>
+
+  <div class="uk-width-1-4@m">
+    <h4>Akce:</h4>
+    <ul class="uk-list uk-list-divider uk-overflow-auto">
+      <?php foreach ($vsechnyAkce as $akce) : ?>
+        <li class="">
+          <a href="/ucast-akce/<?= $akce["id_akce"] ?>">
+            <?php
+            echo $akce["nazev"] . " (" . date("d.m.", strtotime($akce["zacatek"])) . " - " . date("d.m.", strtotime($akce["konec"])) . ")";
+            ?>
+          </a>
+        </li>
+      <?php endforeach; ?>
+    </ul>
+  </div>
+  <?php // Sekce se zobrazí pokud akci ještě nebyla zapsaná docházka ?>
+  <?php if (isset($vybranaAkce) && ($vybranaAkce != null) && ($upravy === false)) { ?>
+    <div class="uk-width-3-4@m">
+      <form class="uk-form" method="post">
+        <input type="hidden" name="schuzka" value="<?= $vybranaAkce["id_akce"] ?>">
+        <table class="uk-table uk-table-striped uk-width-1-1">
+          <?php foreach ($deti as $dite) : ?>
+            <tr>
+              <td>
+                <?= $dite["jmeno"] . " " . $dite["prijmeni"] ?>
+              </td>
+              <td>
+                <a onclick="minus('d-<?= $dite["id_rangera"] ?>')" class="uk-icon-link" uk-icon="minus"></a>
+                <input class="uk-input uk-form-width-small" type="number" name="d-<?= $dite["id_rangera"] ?>" value="0" id="d-<?= $dite["id_rangera"] ?>">
+                <a onclick="plus('d-<?= $dite["id_rangera"] ?>')" class="uk-icon-link" uk-icon="plus"></a>
+              </td>
+              <td>
+                <label class="uk-margin-right"><input onclick="pritomen('d-<?= $dite["id_rangera"] ?>')" class="uk-radio" type="radio" name="o-<?= $dite["id_rangera"] ?>" value="pritomen"> Přítomen </label>
+                <label class="uk-margin-right"><input onclick="omluven('d-<?= $dite["id_rangera"] ?>')" class="uk-radio" type="radio" name="o-<?= $dite["id_rangera"] ?>" value="omluven"> Omluven </label>
+                <label class="uk-margin-right"><input onclick="chybi('d-<?= $dite["id_rangera"] ?>')" class="uk-radio" type="radio" name="o-<?= $dite["id_rangera"] ?>" value="neomluven" checked> Chybí </label>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </table>
+        <input class="btn-orange" type="submit" name="body" value="Uložit">
+      </form>
+    </div>
+  <?php } ?>
+
+
+  <?php // Sekce se zobrazí pokud akci již byla zapsaná docházka -> uprava existujicích záznamnů ?>          
+  <?php if ($upravy === true) { ?>
+    <div class="uk-width-3-4@m">
+      <form class="uk-form" method="post">
+        <input type="hidden" name="schuzka" value="<?= $vybranaAkce["id_akce"] ?>">
+        <table class="uk-table uk-table-striped uk-width-1-1">
+          <?php foreach ($deti as $dite) : ?>
+            <tr>
+              <?php
+                if(($zaznam = $this->najdiZaznam($dite["id_rangera"],$ucast)) !== false){
+              ?>
+              <td>
+                <?= $dite["jmeno"] . " " . $dite["prijmeni"] ?>
+              </td>
+              <td>
+                <a onclick="minus('d-<?= $dite["id_rangera"] ?>')" class="uk-icon-link" uk-icon="minus"></a>
+                <input class="uk-input uk-form-width-small" type="number" name="d-<?= $dite["id_rangera"] ?>" value="<?= $zaznam["pocet_bodu"] ?>" id="d-<?= $dite["id_rangera"] ?>">
+                <a onclick="plus('d-<?= $dite["id_rangera"] ?>')" class="uk-icon-link" uk-icon="plus"></a>
+              </td>
+              <td>
+                <label class="uk-margin-right"><input onclick="pritomen('d-<?= $dite["id_rangera"] ?>')" class="uk-radio" type="radio" name="o-<?= $dite["id_rangera"] ?>" value="pritomen" <?php if($zaznam["stav"] == "pritomen") echo "checked"; ?>> Přítomen </label>
+                <label class="uk-margin-right"><input onclick="omluven('d-<?= $dite["id_rangera"] ?>')" class="uk-radio" type="radio" name="o-<?= $dite["id_rangera"] ?>" value="omluven" <?php if($zaznam["stav"] == "omluven") echo "checked"; ?>> Omluven </label>
+                <label class="uk-margin-right"><input onclick="chybi('d-<?= $dite["id_rangera"] ?>')" class="uk-radio" type="radio" name="o-<?= $dite["id_rangera"] ?>" value="neomluven" <?php if($zaznam["stav"] == "neomluven") echo "checked"; ?>> Chybí </label>
+              </td>
+              <?php
+                }
+              ?>
+              
+            </tr>
+          <?php endforeach; ?>
+        </table>
+        <input class="btn-green" type="submit" name="body-upravit" value="Uložit">
+      </form>
+    </div>
+  <?php } ?>
+
+
+</div>
+<script>
+  function omluven(id) {
+    var input = document.getElementById(id);
+    if (input.value == <?= $config->body->akce->omluven ?>)
+      input.value = 0;
+    else
+      input.value = <?= $config->body->akce->omluven ?>;
+  }
+
+  function pritomen(id) {
+    var input = document.getElementById(id);
+    input.value = <?= $config->body->akce->pritomen ?>;
+  }
+
+  function chybi(id) {
+    var input = document.getElementById(id);
+    input.value = <?= $config->body->akce->neomluven ?>;
+  }
+
+  function plus(id) {
+    var input = document.getElementById(id);
+    input.value++;
+  }
+
+  function minus(id) {
+    var input = document.getElementById(id);
+    if (input.value != 0)
+      input.value--;
+  }
+</script>

@@ -1,0 +1,147 @@
+<div class="uk-width-3-5@l uk-margin-auto">
+    <form method="post" uk-grid class="uk-margin-remove">
+        <div class="uk-padding-small">
+            <div>
+                <h1>Nastavení aplikace</h1>
+            </div>
+
+            <div uk-grid>
+
+
+
+
+                <li class="uk-width-1-1">
+                    <h2 class="uk-width-1-1">Váš oddíl</h2>
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="form-stacked-text">Název oddílu (celý název)</label>
+                        <div class="uk-width-1-1">
+                            <input name="nazevOddilu" class="uk-input" id="form-stacked-text" type="text" placeholder="<?= $config->nazevOddilu; ?>" value="<?= $config->nazevOddilu; ?>">
+                        </div>
+                    </div>
+
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="form-stacked-text">URL aplikace</label>
+                        <div class="uk-width-1-1">
+                            <input name="urlAplikace" class="uk-input" id="form-stacked-text" type="text" placeholder="<?= $config->urlAplikace; ?>" value="<?= $config->urlAplikace; ?>">
+                        </div>
+                    </div>
+
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="form-stacked-text">Číslo oddílu</label>
+                        <div class="uk-width-1-1">
+                            <input name="cisloOddilu" class="uk-input" id="form-stacked-text" type="text" placeholder="<?= $config->cisloOddilu; ?>" value="<?= $config->cisloOddilu; ?>">
+                        </div>
+                    </div>
+
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="form-stacked-text">Organizace</label>
+                        <div class="uk-width-1-1">
+                            <input name="organizace" class="uk-input" id="form-stacked-text" type="text" placeholder="<?= $config->organizace; ?>" value="<?= $config->organizace; ?>">
+                        </div>
+                    </div>
+
+                    <div class="uk-margin">
+                        <label class="uk-form-label" for="form-stacked-text">Klubovna (město)</label>
+                        <div class="uk-width-1-1">
+                            <input name="zakladnaOddilu" class="uk-input" id="form-stacked-text" type="text" placeholder="<?= $config->zakladnaOddilu; ?>" value="<?= $config->zakladnaOddilu; ?>">
+                        </div>
+                    </div>
+
+                </li>
+                <li>
+                    <h2>Nastevnení schůzek</h2>
+
+                    <p>Jsou schůzky pravidelně ?</p>
+                    <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                        <label><input onclick="showRest()" class="uk-radio" type="radio" name="pravidelneSchuzky" value="true" <?php if ($config->pravidelneSchuzky == "true") echo "checked" ?>> Ano</label>
+                        <label><input onclick="hideRest()" class="uk-radio" type="radio" name="pravidelneSchuzky" value="false" <?php if ($config->pravidelneSchuzky == "false") echo "checked" ?>> Ne</label>
+                    </div>
+                    <div id="rest">
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="form-stacked-select">Vyberte den</label>
+                            <div class="uk-form-controls">
+                                <select class="uk-select" id="form-stacked-select" name="denSchuzky">
+                                    <option value="Monday" <?php if ($config->denSchuzky == "Monday") echo "selected"; ?>>Pondělí</option>
+                                    <option value="Tuesday" <?php if ($config->denSchuzky == "Tuesday") echo "selected"; ?>>Úterý</option>
+                                    <option value="Wednesday" <?php if ($config->denSchuzky == "Wednesday") echo "selected"; ?>>Středa</option>
+                                    <option value="Thursday" <?php if ($config->denSchuzky == "Thursday") echo "selected"; ?>>Čtvrtek</option>
+                                    <option value="Friday" <?php if ($config->denSchuzky == "Friday") echo "selected"; ?>>Pátek</option>
+                                    <option value="Saturday" <?php if ($config->denSchuzky == "Saturday") echo "selected"; ?>>Sobota</option>
+                                    <option value="Sunday" <?php if ($config->denSchuzky == "Sunday") echo "selected"; ?>>Neděle</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="zacatek">Začátek schůzky</label>
+                            <div class="uk-form-controls">
+                                <input id="zacatek" class="uk-input uk-form-width-medium" type="time" placeholder="Začátek" name="zacatekSchuzky" value="<?= $config->zacatekSchuzky ?>">
+                            </div>
+                        </div>
+                        <div class="uk-margin">
+                            <label class="uk-form-label" for="konec">Konec schůzky (přibližně)</label>
+                            <div class="uk-form-controls">
+                                <input id="konec" class="uk-input uk-form-width-medium" type="time" placeholder="Konec" name="konecSchuzky" value="<?= $config->konecSchuzky ?>">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <h2>Nastavení bodování</h2>
+                    <h3>Schůzky:</h3>
+                    <div class="uk-grid-small" uk-grid>
+                        <div class="uk-width-1-4@s">
+                            <p>Přítomen</p>
+                            <input class="uk-input" type="number" placeholder="4" name="schuzkyPritomen" value="<?= $config->schuzkyPritomen ?>">
+                        </div>
+                        <div class="uk-width-1-4@s">
+                            <p>Omluven</p>
+                            <input class="uk-input" type="number" placeholder="2" name="schuzkyOmluven" value="<?= $config->schuzkyOmluven ?>">
+                        </div>
+                        <div class="uk-width-1-4@s">
+                            <p>Neomluven</p>
+                            <input class="uk-input" type="number" placeholder="0" name="schuzkyNeomluven" value="<?= $config->schuzkyNeomluven ?>">
+                        </div>
+                        <div class="uk-width-1-4@s">
+                            <p>Pozdě</p>
+                            <input class="uk-input" type="number" placeholder="3" name="schuzkyPozde" value="<?= $config->schuzkyPozde ?>">
+                        </div>
+                    </div>
+                    <h3>Akce:</h3>
+                    <div class="uk-grid-small" uk-grid>
+                        <div class="uk-width-1-4@s">
+                            <p>Přítomen</p>
+                            <input class="uk-input" type="number" placeholder="10" name="akcePritomen" value="<?= $config->akcePritomen ?>">
+                        </div>
+                        <div class="uk-width-1-4@s">
+                            <p>Omluven</p>
+                            <input class="uk-input" type="number" placeholder="2" name="akceOmluven" value="<?= $config->akceOmluven ?>">
+                        </div>
+                        <div class="uk-width-1-4@s">
+                            <p>Neomluven</p>
+                            <input class="uk-input" type="number" placeholder="0" name="akceNeomluven" value="<?= $config->akceNeomluven ?>">
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <h2>Vývojářské nastavení</h2>
+                    <p>Construction mode</p>
+                    <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+                        <label><input class="uk-radio" type="radio" name="constructionMode" value="false" <?php if ($config->constructionMode == "false") echo "checked" ?>> Vypnuto</label>
+                        <label><input onclick="return confirm('Jestli nevíš co to dělá, tak to raději nezapínej')" class="uk-radio" type="radio" name="constructionMode" value="true" <?php if ($config->constructionMode == "true") echo "checked" ?>> Zapnuto</label>
+                    </div>
+                </li>
+
+            </div>
+        </div>
+        <button onclick="return confirm('Uložit nastavení ?');" id="button" class="btn-green" type="submit" name="ulozit-nastaveni">Uložit</button>
+    </form>
+</div>
+<script>
+    function showRest() {
+        var rest = document.getElementById("rest").style.display = "block";
+    }
+
+    function hideRest() {
+        var rest = document.getElementById("rest").style.display = "none";
+    }
+</script>

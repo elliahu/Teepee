@@ -1,0 +1,196 @@
+<h1 class="uk-text-center uk-margin-remove uk-heading-medium">Statistika</h1>
+<div class="uk-width-3-5@l uk-width-1-1@m uk-margin-auto">
+  <div class="uk-margin-medium-top">
+    <ul class="uk-flex-center" uk-tab>
+      <li class="uk-active"><a href="/statistika">Celkové statistiky</a></li>
+      <?php
+      foreach ($kmeny as $kmen) {
+      ?>
+        <li><a onclick="window.location.href = '/statistika/<?= $kmen['id_kmenu'] ?>'"><?= $kmen["nazev"] ?></a></li>
+      <?php
+      }
+      ?>
+    </ul>
+  </div>
+  <div id="celkovy-preheled" uk-scrollspy="cls:uk-animation-fade">
+    <h2>Celkový přehled</h2>
+    <canvas id="statistika"></canvas>
+    <script>
+      var ctx = document.getElementById('statistika');
+      var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: [<?php
+                    foreach ($statistika["jmena"] as $jmeno) {
+                      echo "'" . $jmeno["jmeno"] . " " . $jmeno["prezdivka"] . " " . $jmeno["prijmeni"] . "'" . ",";
+                    }
+                    ?>],
+          datasets: [{
+            label: 'Celkový počet bodů',
+            data: [<?php
+                    foreach ($statistika["jmena"] as $jmeno) {
+                      echo $jmeno["pocet_bodu"] . ",";
+                    }
+                    ?>],
+            backgroundColor: [
+              <?php foreach ($statistika["jmena"] as $jmeno) {
+                echo "'" . $this->colorGenerator->randomColorRgba(0.5) . "',";
+              }
+              ?>
+            ],
+            borderColor: [
+              <?php foreach ($statistika["jmena"] as $jmeno) {
+                echo "'rgba(80,80,80,0.5)',";
+              }
+              ?>
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      });
+    </script>
+  </div>
+  <div id="hlidka-v-cislech" uk-scrollspy="cls:uk-animation-fade">
+    <h2>Hlídka v číslech</h2>
+    <div class="uk-padding-small">
+      <div class="uk-background-muted uk-width-1-1 uk-padding-small">
+        <div class="uk-child-width-expand@s uk-text-center" uk-grid>
+          <div>
+            <h1><?= $pocetDeti ?></h1>
+            <p>Počet dětí</p>
+          </div>
+          <div>
+            <h1><?= $pocetSchuzek ?></h1>
+            <p>Počet schůzek</p>
+          </div>
+          <div>
+            <h1><?= $pocetAkci ?></h1>
+            <p>Počet akcí</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="ucast-schuzky" uk-scrollspy="cls:uk-animation-fade">
+    <h2>Účast na schůzkách</h2>
+    <canvas id="statistika-schuzky"></canvas>
+    <script>
+      var ctx = document.getElementById('statistika-schuzky');
+      var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [<?php
+                    foreach ($schuzky as $schuzka) {
+                      echo "'" . date_format(date_create($schuzka["datum"]), "d.m.Y") . "',";
+                    }
+                    ?>],
+          datasets: [{
+            label: 'Počet účastníků',
+            data: [<?php
+                    foreach ($schuzky as $schuzka) {
+                      echo $schuzka["pocet"] . ",";
+                    }
+                    ?>],
+            backgroundColor: [
+              <?php
+              $barva = $this->colorGenerator->randomColorRgba(0.5);
+              echo "'" . $barva . "'";
+
+              ?>
+            ],
+            borderColor: [
+              <?php
+              echo "'" . $barva . "'";
+
+              ?>
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      });
+    </script>
+  </div>
+  <h2>Účast v číslech</h2>
+  <div class="uk-padding-small">
+      <div class="uk-background-muted uk-width-1-1 uk-padding-small">
+        <div class="uk-child-width-expand@s uk-text-center" uk-grid>
+          <div>
+            <h1><?= round($prumUcastSchuzka, 1) ?> <span class="uk-text-muted uk-text-large"><?= round(($prumUcastSchuzka/$pocetDeti)*100,1)."%" ?></span></h1>
+            <p>Průměrná účast na schůzkách</p>
+          </div>
+          <div>
+            <h1><?= round($prumUcastAkce, 1) ?> <span class="uk-text-muted uk-text-large"><?= round(($prumUcastAkce/$pocetDeti)*100,1)."%" ?></span></h1>
+            <p>Průměrná účast na akcích</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  <div id="ucast-akce" uk-scrollspy="cls:uk-animation-fade">
+    <h2>Účast na akcích</h2>
+    <canvas id="statistika-akce"></canvas>
+    <script>
+      var ctx = document.getElementById('statistika-akce');
+      var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [<?php
+                    foreach ($akce as $schuzka) {
+                      echo "'" . $schuzka["datum"] . "',";
+                    }
+                    ?>],
+          datasets: [{
+            label: 'Počet účastníků',
+            data: [<?php
+                    foreach ($akce as $schuzka) {
+                      echo $schuzka["pocet"] . ",";
+                    }
+                    ?>],
+            backgroundColor: [
+              <?php
+              $barva = $this->colorGenerator->randomColorRgba(0.5);
+              echo "'" . $barva . "'";
+
+              ?>
+            ],
+            borderColor: [
+              <?php
+              echo "'" . $barva . "'";
+
+              ?>
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      });
+    </script>
+
+  </div>
+
+</div>

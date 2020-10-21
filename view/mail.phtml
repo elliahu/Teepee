@@ -1,0 +1,41 @@
+<h1 class="uk-position-center uk-text-center">Under construction<br>:(</h1>
+<!--<div class="uk-width-1-1 uk-padding-small uk-padding-remove-top">
+  <h2>Odeslaná pošta</h2>
+  <a href="/mail/odeslat" class="btn-green" uk-toggle>Nový email</a>
+</div>
+<div class="uk-width-1-1 uk-padding-small ">
+    <div class=" uk-overflow-auto">
+      <table class="data-tables uk-table uk-table-striped">
+        <thead>
+            <tr>
+              <th>Předmět</th>
+              <th>Datum</th>
+              <th>Odesilatel</th>
+            </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($vsechnyEmaily as $email) {
+            ?>
+            <tr>
+              <td>
+                <?= "<a class='uk-link uk-link-text' href='mail-viewer/".$email["id_posty"]."'>".$email["predmet"]."</a>" ?>
+              </td>
+              <td>
+                <?= date("d.m. Y",strtotime($email["datum"])) ?>
+              </td>
+              <td>
+                <?php
+                $vedouci = DB::getVedouci($email["odeslal"]);
+                if(!isset($vedouci->scalar)){
+                  echo $vedouci->jmeno." ".$vedouci->prijmeni;
+                }
+                ?>
+              </td>
+            </tr>
+            <?php
+          }
+          ?>
+        </tbody>
+    </table>
+  </div>
+</div> -->

@@ -1,0 +1,109 @@
+<div class="uk-width-1-1">
+  <h2>Nový vedoucí</h2>
+  <?php
+    if(isset($error)){
+      echo $error;
+    }
+   ?>
+</div>
+  <form method="post" uk-grid class="uk-margin-remove">
+    <div class="uk-width-1-2@m uk-margin-remove-left uk-padding-small">
+      <div class="uk-width-1-1">
+        <h4>Informace</h4>
+      </div>
+      <div class="uk-width-1-1 uk-margin-small">
+        <label for="jmeno">Jméno</label>
+        <input id="jmeno" class="uk-input" type="text" name="jmeno" value="<?php if(isset($jmeno)) echo $jmeno; ?>">
+      </div>
+      <div class="uk-width-1-1 uk-margin-small">
+        <label for="prezdivka">Přezdívka (Není povinné)</label>
+        <input id="prezdivka" class="uk-input" type="text" name="prezdivka"
+         value="<?php if(isset($prezdivka)) echo $prezdivka; ?>">
+      </div>
+      <div class="uk-width-1-1 uk-margin-small">
+        <label for="prijmeni">Příjmení</label>
+        <input id="prijmeni" class="uk-input" type="text" name="prijmeni"
+        value="<?php if(isset($prijmeni)) echo $prijmeni; ?>">
+      </div>
+      <div class="uk-width-1-1 uk-margin-small">
+        <label for="datnar">Datum narození</label>
+        <input id="datnar" class="uk-input" type="date" name="datum_narozeni"
+         value="<?php if(isset($datum_narozeni)) echo $datum_narozeni; ?>">
+      </div>
+      <div class="uk-width-1-1 uk-margin-small">
+        <label for="email">Email</label>
+        <input id="email" class="uk-input" type="email" name="email"
+         value="<?php if(isset($email)) echo $email; ?>">
+      </div>
+      <div class="uk-width-1-1 uk-margin-small">
+        <label for="tel">Telefon</label>
+        <input id="tel" class="uk-input" type="tel" name="tel"
+         value="<?php if(isset($tel)) echo $tel; ?>">
+      </div>
+
+    </div>
+
+      <div class="uk-width-1-2@m uk-margin-remove-left uk-padding-small">
+        <div class="uk-width-1-1">
+          <h4>Kmen</h4>
+        </div>
+        <div class="uk-width-1-1 uk-margin-small">
+          <label for="kmen">Domovský kmen</label>
+          <div class="uk-form-controls">
+            <select class="uk-select" id="kmen" name="kmen">
+              <?php
+                $kmeny = DB::vsechnyKmeny();
+                foreach($kmeny as $kmen){
+                  echo "<option value='".$kmen["id_kmenu"]."'>".$kmen["nazev"]."</option>" ;
+                }
+               ?>
+            </select>
+        </div>
+        </div>
+        <div class="uk-width-1-1">
+          <h4>Uživatelský účet vedoucího</h4>
+        </div>
+        <div class="uk-width-1-1 uk-margin-small">
+          <label for="usr">Uživatelské jméno</label>
+          <div class="uk-inline uk-width-1-1">
+            <span class="uk-form-icon" uk-icon="icon: user"></span>
+            <input id="usr" class="uk-input" type="text" name="uz_jmeno"
+             value="<?php if(isset($uz_jmeno)) echo $uzjmeno; ?>">
+          </div>
+        </div>
+        <div class="uk-width-1-1 uk-margin-small">
+          <label for="hes">Heslo</label>
+          <div class="uk-inline uk-width-1-1">
+            <span class="uk-form-icon" uk-icon="icon: lock"></span>
+            <input id="hes" class="uk-input" type="password" name="heslo" onkeyup='check();'>
+          </div>
+        </div>
+        <div class="uk-width-1-1 uk-margin-small">
+          <label for="heslo">Heslo znovu</label>
+          <div class="uk-inline uk-width-1-1">
+            <span class="uk-form-icon" uk-icon="icon: lock"></span>
+            <input id="heslo" class="uk-input" type="password" name="conf_heslo" onkeyup='check();'>
+          </div>
+          <span id='message'></span>
+        </div>
+        <button id="button" class="btn-green" type="submit">Vytvořit nového vedoucího</button>
+    </div>
+  </form>
+  <script>
+      var check = function() {
+        if (document.getElementById('hes').value ==
+          document.getElementById('heslo').value) {
+          if(document.getElementById('hes').value != "" && document.getElementById('heslo').value != ""){
+            document.getElementById('message').style.color = 'green';
+            document.getElementById('message').innerHTML = 'Hesla jsou stejná :)';
+          }
+          else{
+            document.getElementById('message').style.color = 'red';
+            document.getElementById('message').innerHTML = 'Vyplňte prosím obě pole !';
+          }
+        } else {
+          document.getElementById('message').style.color = 'red';
+          document.getElementById('message').innerHTML = 'Hesla nejsou stejná :(';
+        }
+      }
+  </script>

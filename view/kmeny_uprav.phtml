@@ -1,0 +1,27 @@
+<div class="uk-width-1-1 uk-padding-small uk-padding-remove-top">
+  <h2>Upravit data kmenu</h2>
+</div>
+<div class="uk-width-1-2 uk-padding-small">
+  <form class="" method="post">
+    <div class="uk-margin-small">
+      <label for="datum">Název kmenu</label>
+      <input class="uk-input" id="nazev" type="text" name="nazev" value="<?= $kmen->nazev ?>">
+    </div>
+    <div class="uk-margin-small">
+      <label for="popis">Minimální věk</label>
+      <input class="uk-input" id="min_vek" type="number" name="min_vek" value="<?= $kmen->min_vek ?>">
+    </div>
+    <div class="uk-margin-small">
+      <label for="popis">Maximální věk</label>
+      <input class="uk-input" id="max_vek" type="number" name="max_vek" value="<?= $kmen->max_vek ?>">
+    </div>
+    <div class="uk-margin-small">
+      <label for="popis">Popis kmenu</label>
+      <input class="uk-input" id="popis" type="text" name="popis" value="<?= $kmen->popis ?>">
+    </div>
+    <p class="uk-text-right">
+        <a href="/kmeny" class="btn-orange">Zrušit</a>
+        <input type="submit" class="btn-green" name="upravit-kmen" value="Upravit">
+    </p>
+  </form>
+</div>

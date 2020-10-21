@@ -1,0 +1,43 @@
+<div class="uk-width-1-1">
+  <h1>Síň slávy</h1>
+  <div class=" uk-overflow-auto">
+    <table class="data-tables uk-table uk-table-striped">
+      <thead>
+          <tr>
+              <th>Pořadí</th>
+              <th>Jméno</th>
+              <th>Přezdívka</th>
+              <th>Příjmení</th>
+              <th>Body</th>
+              <th>Kmen</th>
+          </tr>
+      </thead>
+      <tbody>
+        <?php $i = 0; ?>
+        <?php foreach ($prehled as $dite): ?>
+          <?php $i++; ?>
+          <tr>
+            <td>
+              <?= $i ?>
+            </td>
+            <td>
+              <?php echo "<a class='uk-link-text' href='/profil-dite/".$dite["id_rangera"]."'>".$dite["jmeno"]."</a>"; ?>
+            </td>
+            <td>
+              <?php echo "<a class='uk-link-text' href='/profil-dite/".$dite["id_rangera"]."'>".$dite["prezdivka"]."</a>"; ?>
+            </td>
+            <td>
+              <?php echo "<a class='uk-link-text' href='/profil-dite/".$dite["id_rangera"]."'>".$dite["prijmeni"]."</a>"; ?>
+            </td>
+            <td>
+              <?php echo "<a class='uk-link-text' href='/body/pridat/".$dite["id_rangera"]."'>".$dite["pocet_bodu"]."</a>"; ?>
+            </td>
+            <td>
+              <?= $dite["nazev"]; ?>
+            </td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+  </table>
+</div>
+</div>

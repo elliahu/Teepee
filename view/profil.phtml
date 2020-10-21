@@ -1,0 +1,162 @@
+<div uk-grid>
+  <div class="uk-width-1-2@m uk-margin-auto">
+    <div class="uk-grid-small uk-flex-middle" uk-grid>
+              <div class="uk-width-auto">
+                  <img class="" width="128" height="128" src="/view/img/avatar.png">
+              </div>
+              <div class="uk-width-expand">
+                  <h3 class="uk-card-title uk-margin-remove-bottom">
+                    <?php
+                      echo $vedouci->jmeno;
+                      if($vedouci->prezdivka != null){?>
+                        <?php
+                        echo $vedouci->prezdivka;
+                      } ?>
+                    <?php
+                      echo $vedouci->prijmeni;
+                    ?>
+                  </h3>
+                  <p class="uk-text-meta uk-margin-remove-top">
+                    <?= $vedouci->kmen->nazev ?>
+                  </p>
+                  <?php if(($_SESSION["uzivatel"]->id_vedouciho == $vedouci->id_vedouciho) || ($_SESSION["uzivatel"]->uroven >= SUPERUSER)) {?>
+                  <a class="btn-green" href="#" uk-toggle="target: #uprava-profilu">Upravit</a>
+                <?php } ?>
+              </div>
+      </div>
+      <div class="uk-width-1-1 uk-padding-small uk-padding-remove-left">
+        <h3>Profilové informace</h3>
+      </div>
+      <div class="uk-width-1-1">
+        <table class="uk-text-left uk-table uk-table-divider">
+          <tbody>
+            <tr>
+              <th class="uk-width-small">Jméno</th>
+              <td><?= $vedouci->jmeno ?></td>
+            </tr>
+            <tr>
+              <th class="uk-width-small">Přezdívka</th>
+              <td><?= $vedouci->prezdivka ?></td>
+            </tr>
+            <tr>
+              <th class="uk-width-small">Příjmení</th>
+              <td><?= $vedouci->prijmeni ?></td>
+            </tr>
+            <tr>
+              <th class="uk-width-small">Datum narození</th>
+              <td><?= $vedouci->datum_narozeni ?></td>
+            </tr>
+            <tr>
+              <th class="uk-width-small">Email</th>
+              <td><?= $vedouci->email ?></td>
+            </tr>
+            <tr>
+              <th class="uk-width-small">Telefon</th>
+              <td><?= $vedouci->tel ?></td>
+            </tr>
+            <tr>
+              <th class="uk-width-small">Kmen</th>
+              <td><?= $vedouci->kmen->nazev ?></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  </div>
+  <div class="uk-width-1-2@m uk-margin-auto uk-padding-small uk-padding-remove-top uk-padding-remove-right">
+    <div class="uk-background-muted uk-padding-small uk-border-rounded">
+      <h3>Uživatelský účet</h3>
+      <table class="uk-text-left uk-table uk-table-divider">
+        <tbody>
+          <tr>
+            <th class="uk-width-small">Uživatelské jméno</th>
+            <td><?= $vedouci->login ?></td>
+          </tr>
+          <tr>
+            <th class="uk-width-small">Poslední přihlášení</th>
+            <td><?= date("G:i:s - d.m. Y (l)",strtotime($vedouci->posledni_prihlaseni)) ?></td>
+          </tr>
+        </tbody>
+      </table>
+      <?php if(($_SESSION["uzivatel"]->id_vedouciho == $vedouci->id_vedouciho) || ($_SESSION["uzivatel"]->uroven >= ADMIN)) {?>
+      
+
+    <?php }?>
+    <?php if(($_SESSION["uzivatel"]->uroven >= ADMIN)) {?>
+      <a class="btn-green" uk-toggle="target: #opravneni">Změnit Oprávnění</a>
+    <?php }?>
+    </div>
+  </div>
+</div>
+<div id="uprava-profilu" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <h2 class="uk-modal-title">Úprava profilu</h2>
+        <form class="uk-form" method="post">
+          <div class="uk-margin-small">
+            <label for="jmeno">Jméno</label>
+            <input class="uk-input" id="jmeno" type="text" name="jmeno" value="<?= $vedouci->jmeno ?>">
+          </div>
+          <div class="uk-margin-small">
+            <label for="prezdivka">Přezdívka (není povinné)</label>
+            <input class="uk-input" id="prezdivka" type="text" name="prezdivka" value="<?= $vedouci->prezdivka ?>">
+          </div>
+          <div class="uk-margin-small">
+            <label for="prijmeni">Příjmení</label>
+            <input class="uk-input" id="prijmeni" type="text" name="prijmeni" value="<?= $vedouci->prijmeni ?>">
+          </div>
+          <div class="uk-margin-small">
+            <label for="datNar">Datum narození</label>
+            <input class="uk-input" id="datNar" type="date" name="datum_narozeni" value="<?= $vedouci->datum_narozeni ?>">
+          </div>
+          <div class="uk-margin-small">
+            <label for="email">Email</label>
+            <input class="uk-input" id="email" type="email" name="email" value="<?= $vedouci->email ?>">
+          </div>
+          <div class="uk-margin-small">
+            <label for="tel">Telefon</label>
+            <input class="uk-input" id="tel" type="tel" name="tel" value="<?= $vedouci->tel ?>">
+          </div>
+          <div class="uk-margin-small">
+            <label for="kmen">Kmen</label>
+            <select class="uk-select" id="kmen" name="id_kmenu">
+              <?php
+                $kmeny = DB::vsechnyKmeny();
+                foreach($kmeny as $kmen){
+                  if($kmen["nazev"] != $vedouci->kmen->nazev ){
+                    echo "<option value='".$kmen["id_kmenu"]."'>".$kmen["nazev"]."</option>" ;
+                  }
+                  else{
+                    echo "<option value='".$kmen["id_kmenu"]."' selected>".$kmen["nazev"]."</option>" ;
+                  }
+                }
+               ?>
+            </select>
+          </div>
+          <div class="uk-text-right">
+            <a class="btn-orange uk-modal-close" type="button">Zrušit</a>
+            <button type="submit" class="btn-green" name="profil">Uložit</button>
+          </div>
+        </form>
+    </div>
+</div>
+<div id="opravneni" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <h2 class="uk-modal-title">Úprava uživatelského oprávnění</h2>
+        <form class="" method="post">
+          <div class="uk-margin-small">
+            <?php $uroven = DB::getUrovenUzivatele($vedouci->id_vedouciho);?>
+            <select class="uk-select" name="opravneni">
+              <option value="9" <?php if($uroven["0"] == 9) {echo "selected";}?>>ADMIN</option>
+              <option value="8" <?php if($uroven["0"] == 8) {echo "selected";}?>>SUPERUSER</option>
+              <option value="4" <?php if($uroven["0"] == 4) {echo "selected";}?>>EDITOR</option>
+              <option value="0" <?php if($uroven["0"] == 0) {echo "selected";}?>>USER</option>
+            </select>
+          </div>
+          <div class="uk-text-right">
+            <a class="btn-orange uk-modal-close" type="button">Zrušit</a>
+            <button class="btn-green" type="submit" name="zmena-opravneni">Uložit</button>
+          </div>
+        </form>
+
+    </div>
+</div>
+

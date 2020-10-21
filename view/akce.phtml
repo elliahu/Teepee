@@ -1,0 +1,122 @@
+<div class="uk-width-1-1 uk-padding-small uk-padding-remove-top">
+  <h2>Přehled akcí</h2>
+  <a href="#pridat-akci" class="btn-green" uk-toggle>Přidat akci</a>
+</div>
+<div class="uk-width-1-1 uk-padding-small ">
+  <div class=" uk-overflow-auto">
+    <table class="data-tables uk-table uk-table-striped">
+      <thead>
+        <tr>
+          <th>Název</th>
+          <!--  <th>ID</th> -->
+          <th>Začátek</th>
+          <th>Konec</th>
+          <th>Popis</th>
+          <th>Vedoucí akce</th>
+          <th>Přidal</th>
+          <th>Akce</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach ($vsechnyAkce as $akce) {
+        ?>
+          <tr>
+            <td>
+              <a href="ucast-akce/<?= $akce["id_akce"] ?>">
+                <?= $akce["nazev"] ?>
+              </a>
+            </td>
+            <!--<td>
+                <?= $akce["id_akce"] ?>
+              </td> -->
+            <td>
+              <?= date("d.m. Y", strtotime($akce["zacatek"])) ?>
+            </td>
+            <td>
+              <?= date("d.m. Y", strtotime($akce["konec"])) ?>
+            </td>
+            <td>
+              <?= $akce["popis"] ?>
+            </td>
+            <td>
+              <?php
+              $vedouci = DB::getVedouci($akce["vedouci_akce"]);
+
+              if (!isset($vedouci->scalar)) {
+                echo $vedouci->jmeno . " " . $vedouci->prijmeni;
+              }
+              ?>
+            </td>
+            <td>
+              <?php
+              $vedouci = DB::getVedouci($akce["pridal"]);
+              if (!isset($vedouci->scalar)) {
+                echo $vedouci->jmeno . " " . $vedouci->prijmeni;
+              }
+              ?>
+            </td>
+            <!-- Ověření zda má vedoucí dostatečná oprávnění -->
+            <?php if ($_SESSION["uzivatel"]->uroven >= ADMIN) { ?>
+              <td>
+                <a class='uk-link-muted' href='/akce/upravit/<?= $akce["id_akce"] ?>'><span uk-icon="pencil"></span></a>
+                <a class='uk-link-muted' href='/akce/smazat/<?= $akce["id_akce"] ?>' onclick="return confirm('Opravdu chceš smazat tento záznam ?')"><span uk-icon="trash"></span></a>
+              </td>
+            <?php } else {
+            ?>
+              <td>
+                <a class='uk-link-muted' href='/akce/upravit/<?= $akce["id_akce"] ?>'><span uk-icon="pencil"></span></a>
+              </td>
+            <?php } ?>
+          </tr>
+        <?php
+        }
+        ?>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="pridat-akci" uk-modal>
+  <div class="uk-modal-dialog uk-modal-body">
+    <h2 class="uk-modal-title">Přidat novou akci</h2>
+    <form class="" method="post">
+      <div class="uk-margin-small">
+        <label for="zacatek">Datum začátku</label>
+        <input class="uk-input" id="zacatek" type="date" name="zacatek">
+      </div>
+      <div class="uk-margin-small">
+        <label for="konec">Datum konce</label>
+        <input class="uk-input" id="konec" type="date" name="konec">
+      </div>
+      <div class="uk-margin-small">
+        <label for="nazev">Název akce</label>
+        <input class="uk-input" id="nazev" type="text" name="nazev">
+      </div>
+      <div class="uk-margin-small">
+        <label for="popis">Popis (nepovinné)</label>
+        <input class="uk-input" id="popis" type="text" name="popis">
+      </div>
+
+      <div class="uk-width-1-1 uk-margin-small">
+        <label for="komu">Vedoucí akce</label>
+        <div class="uk-form-controls">
+          <select class="uk-select" id="komu" name="vedouci_akce">
+            <option value="<?= $_SESSION['uzivatel']->id_vedouciho ?>"> - Vyberte - </option>
+            <?php
+            $vedouci = DB::vsichniVedouci();
+            foreach ($vedouci as $v) {
+              echo "<option value='" . $v["id_vedouciho"] . "' >" . $v["jmeno"] . " " . $v["prijmeni"] . "</option>";
+            }
+            ?>
+          </select>
+        </div>
+      </div>
+
+      <p class="uk-text-right">
+        <button class="btn-orange uk-modal-close" type="button">Zrušit</button>
+        <input type="submit" class="btn-green" name="pridat-akci" value="Přidat akci">
+      </p>
+    </form>
+
+  </div>
+</div>

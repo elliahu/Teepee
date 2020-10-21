@@ -1,0 +1,38 @@
+<div class="uk-width-1-2@m">
+  <h1>Přidat body</h1>
+
+  <form method="post" uk-grid class="uk-margin-remove">
+
+    <div class="uk-width-1-1 uk-margin-small">
+      <label for="komu">Komu</label>
+      <div class="uk-form-controls">
+        <select class="uk-select" id="komu" name="id">
+          <option> - Vyberte - </option>
+          <?php
+            $deti = DB::vsechnyDeti();
+            foreach($deti as $dite){
+              if(isset($id_ditete) && ($dite["id_rangera"] == $id_ditete))
+                echo "<option value='".$dite["id_rangera"]."' selected>".$dite["jmeno"]." ".$dite["prijmeni"]."</option>" ;
+              else
+                echo "<option value='".$dite["id_rangera"]."' >".$dite["jmeno"]." ".$dite["prijmeni"]."</option>" ;
+            }
+           ?>
+        </select>
+    </div>
+    </div>
+
+    <div class="uk-width-1-1 uk-margin-small">
+      <label for="body">Pocet bodů</label>
+      <input id="body" class="uk-input" type="number" name="pocet_bodu">
+    </div>
+
+    <div class="uk-width-1-1 uk-margin-small">
+      <label for="duvod">Důvod</label>
+      <input id="duvod" class="uk-input" type="text" name="duvod" placeholder="Vyplňte">
+    </div>
+    <div class="uk-width-1-1 uk-margin-small">
+      <a href="/body" class="btn-orange">Zrušit</a>
+      <input class="btn-green" type="submit" name="pridat" value="Přidat body">
+    </div>
+  </from>
+</div>

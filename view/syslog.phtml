@@ -1,0 +1,41 @@
+<div class="uk-width-1-1 uk-margin-auto">
+    <h1>System log</h1>
+    <div class="uk-overflow-auto">
+        <table class="uk-table  uk-table-striped data-tables">
+            <thead>
+                <tr>
+                    <th>Typ</th>
+                    <th>ID logu</th>
+                    <th>ID vedouciho</th>
+                    <th>Log</th>
+                    <th>Čas</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($syslog as $log) { ?>
+                    <tr>
+                        <td>
+                            
+                            <?= $log["typ"] ?>
+                        </td>
+
+                        <td><?= $log["id_logu"] ?></td>
+
+                        <?php if ($log["id_vedouciho"] != 0) { ?>
+                            <td><a href="profil/<?= $log["id_vedouciho"] ?>"><?= $log["id_vedouciho"] ?></a></td>
+                        <?php } else { ?>
+                            <td>SYSTEM</td>
+                        <?php } ?>
+
+                        <td><?= $log["log"] ?></td>
+
+                        <td><?= $log["cas"] ?></td>
+
+
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+</div>

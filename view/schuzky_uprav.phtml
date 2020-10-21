@@ -1,0 +1,19 @@
+<div class="uk-width-1-1 uk-padding-small uk-padding-remove-top">
+  <h2>Upravit data schůzky</h2>
+</div>
+<div class="uk-width-1-2 uk-padding-small">
+  <form class="" method="post">
+    <div class="uk-margin-small">
+      <label for="datum">Datum schůzky</label>
+      <input class="uk-input" id="datum" type="date" name="datum" value="<?= substr($schuzka["datum"],0,10) ?>">
+    </div>
+    <div class="uk-margin-small">
+      <label for="popis">Popis</label>
+      <input class="uk-input" id="popis" type="text" name="popis" value="<?= $schuzka["popis"] ?>">
+    </div>
+    <p class="uk-text-right">
+        <a href="/schuzky" class="btn-orange">Zrušit</a>
+        <input type="submit" class="btn-green" name="upravit-schuzku" value="Upravit">
+    </p>
+  </form>
+</div>

@@ -1,0 +1,124 @@
+<h1 class="uk-text-center uk-margin-remove uk-heading-medium">Statistika</h1>
+<div class="uk-width-3-5@l uk-width-1-1@m uk-margin-auto">
+  <div class="uk-margin-medium-top">
+    <ul class="uk-flex-center" uk-tab>
+      <li><a onclick="window.location.href = '/statistika'">Celkové statistiky</a></li>
+      <?php
+      foreach ($kmeny as $kmen) {
+      ?>
+        <li class="<?php if($akt_kmen["id_kmenu"] == $kmen['id_kmenu']) echo "uk-active";?>"><a onclick="window.location.href = '/statistika/<?= $kmen['id_kmenu'] ?>'"><?= $kmen["nazev"] ?></a></li>
+      <?php
+      }
+      ?>
+    </ul>
+  </div>
+
+
+  <div>
+  <h2>Celkový přehled</h2>
+    <canvas id="celkovyPrehled"></canvas>
+    <script>
+      var ctx = document.getElementById('celkovyPrehled');
+      var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: [<?php
+                    foreach ($celkovyPrehled["data"] as $jmeno) {
+                      echo "'" . $jmeno["jmeno"] . " " . $jmeno["prezdivka"] . " " . $jmeno["prijmeni"] . "'" . ",";
+                    }
+                    ?>],
+          datasets: [{
+            label: 'Celkový počet bodů - <?= $celkovyPrehled["kmen"] ?>',
+            data: [<?php
+                    foreach ($celkovyPrehled["data"] as $jmeno) {
+                      echo $jmeno["pocet_bodu"] . ",";
+                    }
+                    ?>],
+            backgroundColor: [
+              <?php foreach ($celkovyPrehled["data"] as $jmeno) {
+                echo "'" . $this->colorGenerator->randomColorRgba(0.5) . "',";
+              }
+              ?>
+            ],
+            borderColor: [
+              <?php foreach ($celkovyPrehled["data"] as $jmeno) {
+                echo "'rgba(80,80,80,0.5)',";
+              }
+              ?>
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      });
+    </script>
+  </div>
+
+  <div>
+  <h2>Po týdnech</h2>
+    <canvas id="poTydnech"></canvas>
+    <script>
+      var ctx = document.getElementById('poTydnech');
+      var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [<?php
+                    foreach ($poTydnech["datum"] as $datum) {
+                      echo "'" . date_format(date_create($datum["datum"]), "d.m.") . "',";
+                    }
+                    ?>],
+          datasets: [
+            <?php foreach ($poTydnech["ranger"] as $ranger) {
+            ?> {
+                label: '<?= $ranger["jmeno"] . " " . $ranger["prijmeni"] ?>',
+                fill: false,
+                data: [<?php
+                        $body = 0;
+                        foreach ($poTydnech["dataset"] as $dataset) {
+                          if ($dataset["id"] == $ranger["id_rangera"]) {
+                            $body += $dataset["body"];
+                            echo $body . ",";
+                          }
+                        }
+                        ?>],
+                backgroundColor: [
+                  <?php foreach ($poTydnech["dataset"] as $dataset) {
+                    echo "'" . $this->colorGenerator->randomColorRgba(0.5) . "',";
+                  }
+                  ?>
+                ],
+                borderColor: [
+                  <?php foreach ($poTydnech["dataset"] as $dataset) {
+                    echo "'" . $this->colorGenerator->randomColorRgba(0.5) . "',";
+                  }
+                  ?>
+                ]
+              },
+            <?php
+            }
+            ?>
+          ]
+        },
+        options: {
+          layout: {
+            padding: {
+              left: 50,
+              right: 0,
+              top: 0,
+              bottom: 0
+            }
+          }
+        }
+      });
+    </script>
+
+  </div>
+</div>

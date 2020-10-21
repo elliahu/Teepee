@@ -1,0 +1,60 @@
+<div class="uk-width-1-1">
+  <h2>Nové dítě</h2>
+</div>
+  <form method="post" uk-grid class="uk-margin-remove">
+    <div class="uk-width-1-2@m uk-margin-remove-left uk-padding-small">
+      <div class="uk-width-1-1">
+        <h4>Informace</h4>
+      </div>
+      <div class="uk-width-1-1 uk-margin-small">
+        <label for="jmeno">Jméno</label>
+        <input id="jmeno" class="uk-input" type="text" name="jmeno" value="<?php if(isset($jmeno)) echo $jmeno; ?>">
+      </div>
+      <div class="uk-width-1-1 uk-margin-small">
+        <label for="prezdivka">Přezdívka</label>
+        <input id="prezdivka" class="uk-input" type="text" name="prezdivka"
+         value="<?php if(isset($prezdivka)) echo $prezdivka; ?>">
+      </div>
+      <div class="uk-width-1-1 uk-margin-small">
+        <label for="prijmeni">Příjmení</label>
+        <input id="prijmeni" class="uk-input" type="text" name="prijmeni"
+        value="<?php if(isset($prijmeni)) echo $prijmeni; ?>">
+      </div>
+      <div class="uk-width-1-1 uk-margin-small">
+        <label for="datnar">Datum narození</label>
+        <input id="datnar" class="uk-input" type="date" name="datum_narozeni"
+         value="<?php if(isset($datum_narozeni)) echo $datum_narozeni; ?>">
+      </div>
+      <div class="uk-width-1-1 uk-margin-small">
+        <label for="email">Kontaktní email</label>
+        <input id="email" class="uk-input" type="email" name="email"
+         value="<?php if(isset($email)) echo $email; ?>" uk-tooltip="title:Email na rodiče;pos: left;">
+      </div>
+      <div class="uk-width-1-1 uk-margin-small">
+        <label for="tel">Kontaktní telefon</label>
+        <input id="tel" class="uk-input" type="tel" name="tel"
+         value="<?php if(isset($tel)) echo $tel; ?>" uk-tooltip="title:Telefon na rodiče;pos:left;">
+      </div>
+
+    </div>
+
+      <div class="uk-width-1-2@m uk-margin-remove-left uk-padding-small">
+        <div class="uk-width-1-1">
+          <h4>Kmen</h4>
+        </div>
+        <div class="uk-width-1-1 uk-margin-small">
+          <label for="kmen">Domovský kmen</label>
+          <div class="uk-form-controls">
+            <select class="uk-select" id="kmen" name="kmen">
+              <?php
+                $kmeny = DB::vsechnyKmeny();
+                foreach($kmeny as $kmen){
+                  echo "<option value='".$kmen["id_kmenu"]."'>".$kmen["nazev"]."</option>" ;
+                }
+               ?>
+            </select>
+        </div>
+        </div>
+        <button id="button" class="btn-green" type="submit" name="pridat-dite">Přidat dítě</button>
+    </div>
+  </form>

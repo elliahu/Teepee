@@ -1,0 +1,98 @@
+<div class="uk-width-1-1 uk-padding-small uk-paddin-remove-top uk-padding-remove-bottom">
+  <h2>Přehled schůzek</h2>
+  <a href="#pridat-schuzku" class="btn-orange" uk-toggle>Přidat schůzku</a>
+  <a href="/schuzky/quick" uk-tooltip="Jedním kliknutím přidá běžnou schůzku s datem nejbližší středy" class="btn-green" uk-toggle>Rychlé přidání
+    <?php
+    if (date('l', strtotime('Today')) != $config->schuzky->den)
+      echo date('d.n. Y', strtotime('next '.$config->schuzky->den));
+    else
+      echo date('d.n. Y', strtotime('Today'));
+    ?>
+  </a>
+  <!--<a href="#pridat-vice-schuzek" class="uk-button uk-button-default" uk-toggle>Přidat více schůzek</a>-->
+</div>
+<div class="uk-width-1-1 uk-padding-small uk-padding-remove-top uk-margin-remove">
+  <div class=" uk-overflow-auto">
+    <table class="data-tables uk-table uk-table-striped">
+      <thead>
+        <tr>
+          <th>Datum</th>
+          <th>Stav</th>
+          <th>Popis</th>
+          <th>Přidal</th>
+          <th>Akce</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        if ($vsechnySchuzky[0] != "Žádné schuzky k vypsání") {
+          foreach ($vsechnySchuzky as $schuzka) {
+        ?>
+            <tr>
+              <td>
+                <a href="/dochazka/<?= $_SESSION["uzivatel"]->kmen->id_kmenu ?>/<?= $schuzka["id_schuzky"] ?>">
+                  <?= date_format(date_create($schuzka["datum"]), "d.m.Y") ?>
+                </a>
+              </td>
+              <td>
+                <?php
+                if (date_format(date_create($schuzka["datum"]), "Y-m-d") > date_format(date_create(), "Y-m-d")) {
+                  echo "Nadcházející";
+                } elseif (date_format(date_create($schuzka["datum"]), "Y-m-d") == date_format(date_create(), "Y-m-d")) {
+                  echo "<b>Dnešní</b>";
+                } else {
+                  echo "Uplynulá";
+                }
+                ?>
+              </td>
+              <td>
+                <?= $schuzka["popis"] ?>
+              </td>
+              <td>
+                <?php
+                $vedouci = DB::getVedouci($schuzka["pridal"]);
+                echo $vedouci->jmeno . " " . $vedouci->prijmeni;
+                ?>
+              </td>
+              <!-- Ověření, zda mám vedoucí dostatečná oprávnění -->
+              <?php if ($vedouci->id_vedouciho == $_SESSION["uzivatel"]->id_vedouciho || $_SESSION["uzivatel"]->uroven >= SUPERUSER) { ?>
+                <td>
+                  <a class='uk-link-muted' href='/schuzky/upravit/<?= $schuzka["id_schuzky"] ?>'><span uk-icon="pencil"></span></a>
+                  <a class='uk-link-muted' href='/schuzky/smazat/<?= $schuzka["id_schuzky"] ?>' onclick="return confirm('Opravdu chceš smazat tento záznam ?')"><span uk-icon="trash"></span></a>
+                </td>
+              <?php } else {
+              ?>
+                <td>
+                  <a class='uk-link-muted' href='/schuzky/upravit/<?= $schuzka["id_schuzky"] ?>'><span uk-icon="pencil"></span></a>
+                </td>
+              <?php } ?>
+            </tr>
+        <?php
+          }
+        }
+        ?>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="pridat-schuzku" uk-modal>
+  <div class="uk-modal-dialog uk-modal-body">
+    <h2 class="uk-modal-title">Nová schůzka</h2>
+    <form class="" method="post">
+      <div class="uk-margin-small">
+        <label for="datum">Datum schůzky</label>
+        <input class="uk-input" id="datum" type="date" name="datum" value="<?= date('Y-m-d', strtotime('next '.$config->schuzky->den)) ?>">
+      </div>
+      <div class="uk-margin-small">
+        <label for="popis">Popis (nepovinné)</label>
+        <input class="uk-input" id="popis" type="text" name="popis" placeholder="Běžná schůzka">
+      </div>
+      <p class="uk-text-right uk-margin-remove-bottom">
+        <button class="btn-orange uk-modal-close" type="button">Zrušit</button>
+        <input type="submit" class="btn-green" name="pridat-schuzku" value="Přidat">
+      </p>
+    </form>
+
+  </div>
+</div>

@@ -1,0 +1,121 @@
+
+<div uk-grid>
+  <div class="uk-width-1-2@m">
+    <div class="uk-grid-small uk-flex-middle" uk-grid>
+              <div class="uk-width-auto orange2-gradient uk-light uk-padding-small uk-border-rounded uk-text-center uk-margin-left">
+                  <h2 class="uk-heading-medium uk-padding-small uk-padding-remove-bottom"><?= $dite->pocet_bodu ?></h2><span>Počet bodů</span>
+              </div>
+              <div class="uk-width-expand">
+                  <h3 class="uk-card-title uk-margin-remove-bottom">
+                    <?php
+                      echo $dite->jmeno;
+                      if($dite->prezdivka != null){?>
+                        <?php
+                        echo $dite->prezdivka;
+                      } ?>
+                    <?php
+                      echo $dite->prijmeni;
+                    ?>
+                  </h3>
+                  <p class="uk-text-meta uk-margin-remove-top">
+                    <?= $dite->kmen->nazev ?>
+                  </p>
+
+                  <a href="/body/pridat/<?= $dite->id_rangera ?>" class="btn-green" uk-icon="plus"></a>
+              </div>
+      </div>
+      <div class="uk-width-1-1 uk-padding-small uk-padding-remove-left">
+        <h3>Profilové informace</h3>
+        <?php if(($_SESSION["uzivatel"]->uroven >= SUPERUSER)) {?>
+          <a class="btn-green" uk-toggle="target: #uprava-profilu">Upravit profil</a>
+        <?php } ?>
+      </div>
+      <div class="uk-width-1-1">
+        <table class="uk-text-left uk-table uk-table-divider">
+          <tbody>
+            <tr>
+              <th class="uk-width-small">Jméno</th>
+              <td><?= $dite->jmeno ?></td>
+            </tr>
+            <tr>
+              <th class="uk-width-small">Přezdívka</th>
+              <td><?= $dite->prezdivka ?></td>
+            </tr>
+            <tr>
+              <th class="uk-width-small">Příjmení</th>
+              <td><?= $dite->prijmeni ?></td>
+            </tr>
+            <tr>
+              <th class="uk-width-small">Datum narození</th>
+              <td><?= $dite->datum_narozeni ?></td>
+            </tr>
+            <tr>
+              <th class="uk-width-small">Kontaktní email</th>
+              <td><?= $dite->kontaktni_email ?></td>
+            </tr>
+            <tr>
+              <th class="uk-width-small">Kontaktní telefon</th>
+              <td><?= $dite->kontaktni_tel ?></td>
+            </tr>
+            <tr>
+              <th class="uk-width-small">Kmen</th>
+              <td><?= $dite->kmen->nazev ?></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  </div>
+</div>
+<div id="uprava-profilu" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <h2 class="uk-modal-title">Úprava profilu dítěte</h2>
+        <form class="uk-form" method="post">
+          <div class="uk-margin-small">
+            <label for="jmeno">Jméno</label>
+            <input class="uk-input" id="jmeno" type="text" name="jmeno" value="<?= $dite->jmeno ?>">
+          </div>
+          <div class="uk-margin-small">
+            <label for="prezdivka">Přezdívka (není povinné)</label>
+            <input class="uk-input" id="prezdivka" type="text" name="prezdivka" value="<?= $dite->prezdivka ?>">
+          </div>
+          <div class="uk-margin-small">
+            <label for="prijmeni">Příjmení</label>
+            <input class="uk-input" id="prijmeni" type="text" name="prijmeni" value="<?= $dite->prijmeni ?>">
+          </div>
+          <div class="uk-margin-small">
+            <label for="datNar">Datum narození</label>
+            <input class="uk-input" id="datNar" type="date" name="datum_narozeni" value="<?= $dite->datum_narozeni ?>">
+          </div>
+          <div class="uk-margin-small">
+            <label for="email">Email</label>
+            <input class="uk-input" id="email" type="email" name="email" value="<?= $dite->kontaktni_email ?>">
+          </div>
+          <div class="uk-margin-small">
+            <label for="tel">Telefon</label>
+            <input class="uk-input" id="tel" type="tel" name="tel" value="<?= $dite->kontaktni_tel ?>">
+          </div>
+          <div class="uk-margin-small">
+            <label for="kmen">Kmen</label>
+            <select class="uk-select" id="kmen" name="id_kmenu">
+              <?php
+                $kmeny = DB::vsechnyKmeny();
+                foreach($kmeny as $kmen){
+                  if($kmen["nazev"] != $dite->kmen->nazev ){
+                    echo "<option value='".$kmen["id_kmenu"]."'>".$kmen["nazev"]."</option>" ;
+                  }
+                  else{
+                    echo "<option value='".$kmen["id_kmenu"]."' selected>".$kmen["nazev"]."</option>" ;
+                  }
+                }
+               ?>
+            </select>
+          </div>
+          <div class="uk-text-right">
+            <a class="uk-modal-close btn-orange" type="button">Zrušit</a>
+            <button type="submit" class="btn-green" name="profil">Uložit</button>
+          </div>
+        </form>
+    </div>
+</div>
+
+</div>
