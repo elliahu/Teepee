@@ -1,3 +1,5 @@
 cfg/user_cfg/
 direct/
 *.sql
+view/uikit/css
+view/uikit/js
