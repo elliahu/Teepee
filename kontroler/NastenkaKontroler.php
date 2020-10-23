@@ -35,7 +35,28 @@ class NastenkaKontroler extends Kontroler{
     global $config;
     $this->data["config"] = $config;
     
+    ## Přechody mezi kmeny
+    /* 
+     * APlikace bude upozorňvat na přechody mezi kmeny
+     * Např dítě A má již věk na to, aby mohlo být součástí vyššího kmene
+     * Aplikace na tuto skutečnost upozorní a nabídne možnost přechodu
+    */
+    $prechody = DB::overPrechody();
+    
+    if(isset($prechody[0]["jmeno"])){ // ověří zda existují přechody
+      $this->data["zadnePrechody"] = true; // true = nalezeny navrhované přechody -> použito v podmínce pohledu
+      $this->data["vsechnyKmeny"] = DB::vsechnyKmeny();
+      $this->data["prechody"] = array();
       
+      //Projde pole prechodů a předá do pohledu navrhované kmeny
+      foreach($prechody as $prechod){
+        $prechod["navrhovanyKmen"] = $this->navrhniKmen($prechod["id_kmenu"],$this->data["vsechnyKmeny"]);
+        array_push($this->data["prechody"],$prechod);
+      }
+    }
+    else {
+      $this->data["zadnePrechody"] = false; 
+    }
     ## Narozeniny
     /* 
      * APlikace bude upozorňvat na narozeniny vedoucích a dětí
@@ -51,44 +72,6 @@ class NastenkaKontroler extends Kontroler{
 
   }
 
-  //ASYNC handler
-  private function asyncRequestHandler(){
-    if(!$this->sessionCheck()) {exit();}
-    //Handler
-    ## Přechody mezi kmeny
-    /* 
-     * APlikace bude upozorňvat na přechody mezi kmeny
-     * Např dítě A má již věk na to, aby mohlo být součástí vyššího kmene
-     * Aplikace na tuto skutečnost upozorní a nabídne možnost přechodu
-    */
-    $prechody = DB::overPrechody();
-    
-    if(isset($prechody[0]["jmeno"])){ // ověří zda existují přechody
-      $this->data["zadnePrechody"] = true; // true = nalezeny navrhované přechody -> použito v podmínce pohledu
-      $this->data["vsechnyKmeny"] = DB::vsechnyKmeny();
-      $this->data["prechody"] = array();
-      //Projde pole prechodů a předá do pohledu navrhované kmeny
-      foreach($prechody as $prechod){
-        $prechod["navrhovanyKmen"] = $this->navrhniKmen($prechod["id_kmenu"],$this->data["vsechnyKmeny"]);
-        array_push($this->data["prechody"],$prechod);
-      }
-    }
-    else {
-      $this->data["zadnePrechody"] = false; 
-    }
-    //Provést vše
-    if(isset($_GET["vsichni"]) && $_GET["vsichni"] == "true"){
-      $this->prechodVsichni($this->data["prechody"]);
-      echo "Hromadný přesun mezi kmeny proveden";
-      exit();
-    }
-    //Provést
-    if(isset($_GET["kdo"]) && isset($_GET["odkud"]) && isset($_GET["kam"])){
-      $this->prechodJeden($this->data["prechody"],$_GET["kdo"]);
-      echo " - přesun proveden";
-      exit();
-    }
-  }
 
   public function dnesniDatum(){
     $mesice = array(
