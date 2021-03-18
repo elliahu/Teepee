@@ -1,41 +1,52 @@
-<h1 class="uk-position-center uk-text-center">Under construction<br>:(</h1>
-<!--<div class="uk-width-1-1 uk-padding-small uk-padding-remove-top">
-  <h2>Odeslaná pošta</h2>
-  <a href="/mail/odeslat" class="btn-green" uk-toggle>Nový email</a>
+<!--<h1 class="uk-position-center uk-text-center">Under construction<br>:(</h1>-->
+<div class="uk-width-1-1 uk-padding-small uk-padding-remove-top" uk-grid>
+  <div class="uk-width-1-2">
+    <h2>Odeslaná pošta</h2>
+  </div>
+  <div class="uk-width-expand uk-text-right">
+    <a href="/mail/odeslat" class="btn-green" uk-toggle><span uk-icon="plus"></span> Nový email</a>
+  </div>
 </div>
-<div class="uk-width-1-1 uk-padding-small ">
+<div class="uk-margin-remove" uk-grid>
+  <div class="uk-width-1-3 uk-padding-small ">
     <div class=" uk-overflow-auto">
       <table class="data-tables uk-table uk-table-striped">
         <thead>
-            <tr>
-              <th>Předmět</th>
-              <th>Datum</th>
-              <th>Odesilatel</th>
-            </tr>
+          <tr>
+            <th>Předmět</th>
+            <th>Datum</th>
+            <!--<th>Odesilatel</th>-->
+          </tr>
         </thead>
         <tbody>
           <?php foreach ($vsechnyEmaily as $email) {
-            ?>
+          ?>
             <tr>
               <td>
-                <?= "<a class='uk-link uk-link-text' href='mail-viewer/".$email["id_posty"]."'>".$email["predmet"]."</a>" ?>
+                <?= "<a class='uk-link uk-link-text' href='/mail/" . $email["id_posty"] . "'>" . $email["predmet"] . "</a>" ?>
               </td>
               <td>
-                <?= date("d.m. Y",strtotime($email["datum"])) ?>
+                <?= date("d.m. Y", strtotime($email["datum"])) ?>
               </td>
-              <td>
+              <!--<td>
                 <?php
                 $vedouci = DB::getVedouci($email["odeslal"]);
-                if(!isset($vedouci->scalar)){
-                  echo $vedouci->jmeno." ".$vedouci->prijmeni;
+                if (!isset($vedouci->scalar)) {
+                  echo $vedouci->jmeno . " " . $vedouci->prijmeni;
                 }
                 ?>
-              </td>
+              </td>-->
             </tr>
-            <?php
+          <?php
           }
           ?>
         </tbody>
-    </table>
+      </table>
+    </div>
   </div>
-</div> -->
+  <div class="uk-width-expand uk-padding-small uk-background-default" uk-height-viewport="offset-bottom	">
+    <?php if (isset($showEmail)) { ?>
+      <iframe src="/model/emailViewerBuffer.html" class="uk-width-1-1 uk-height-1-1" frameborder="0"></iframe>
+    <?php } ?>
+  </div>
+</div>

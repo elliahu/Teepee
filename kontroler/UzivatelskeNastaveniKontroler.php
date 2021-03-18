@@ -1,6 +1,6 @@
 <?php
 ###########################
-# Třída UzivatelskeNastaveniKontroler #
+# Třída UzivatelskeNastaveniKontroler 
 ###########################
 /*
   Třída má na starost správu uzivatelskoho nastavení 
@@ -25,14 +25,16 @@ class UzivatelskeNastaveniKontroler extends Kontroler{
 
   private function zmenNastaveni(){
     if(isset($_POST["zmenit_nastaveni"])){
-      if(!isset($_POST["cas"]))
-        $_POST["cas"] = 2;
-      $usrCfg = $this->data["user_config"];
-      $usrCfg->upozorneni->skrytPo = $_POST["cas"];
-      file_put_contents("cfg/user_cfg/user_cfg_".$_SESSION["uzivatel"]->id_vedouciho.".json",json_encode($usrCfg));
-      $this->pridejZpravu("Uživatelské nastavení změněno","success");
+      unset($_POST["zmenit_nastaveni"]);
+      $new_cfg = (object) array_merge((array)$_SESSION["user_config"],$_POST);
+
+      //Zapíše hondoty do configu*/
+      file_put_contents("cfg/user_cfg/user_cfg_".$_SESSION["uzivatel"]->id_vedouciho.".json",json_encode($new_cfg));
+      LoginKontroler::refreshUserConfig();
+      $this->pridejZpravu("Uživatelské nastavení uloženo","success");
       $this->presmeruj("uzivatelske-nastaveni");
     }
+
   }
   
  //Metoda pro změnu uživatelského jména

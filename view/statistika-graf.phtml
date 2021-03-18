@@ -36,7 +36,7 @@
                     ?>],
             backgroundColor: [
               <?php foreach ($celkovyPrehled["data"] as $jmeno) {
-                echo "'" . $this->colorGenerator->randomColorRgba(0.5) . "',";
+                echo "'" . ColorManager::randomColorRgba(0.5) . "',";
               }
               ?>
             ],
@@ -91,13 +91,13 @@
                         ?>],
                 backgroundColor: [
                   <?php foreach ($poTydnech["dataset"] as $dataset) {
-                    echo "'" . $this->colorGenerator->randomColorRgba(0.5) . "',";
+                    echo "'" . ColorManager::randomColorRgba(0.5) . "',";
                   }
                   ?>
                 ],
                 borderColor: [
                   <?php foreach ($poTydnech["dataset"] as $dataset) {
-                    echo "'" . $this->colorGenerator->randomColorRgba(0.5) . "',";
+                    echo "'" . ColorManager::randomColorRgba(0.5) . "',";
                   }
                   ?>
                 ]

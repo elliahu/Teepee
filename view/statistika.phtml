@@ -34,7 +34,7 @@
                     ?>],
             backgroundColor: [
               <?php foreach ($statistika["jmena"] as $jmeno) {
-                echo "'" . $this->colorGenerator->randomColorRgba(0.5) . "',";
+                echo "'" . ColorManager::randomColorRgba(0.5) . "',";
               }
               ?>
             ],
@@ -102,7 +102,7 @@
                     ?>],
             backgroundColor: [
               <?php
-              $barva = $this->colorGenerator->randomColorRgba(0.5);
+              $barva = ColorManager::randomColorRgba(0.5);
               echo "'" . $barva . "'";
 
               ?>
@@ -165,7 +165,7 @@
                     ?>],
             backgroundColor: [
               <?php
-              $barva = $this->colorGenerator->randomColorRgba(0.5);
+              $barva = ColorManager::randomColorRgba(0.5);
               echo "'" . $barva . "'";
 
               ?>

@@ -6,7 +6,7 @@
 </head>
 
 
-<body id="body" class=" uk-height-1-1 uk-background-cover <?= $user_config->ui->theme ?> " style="background-image: url(/view/img/<?= $user_config->ui->theme ?>.jpg);">
+<body id="body" class="<?php if(isset($user_config->ui->theme) && $user_config->ui->theme == "uk-light") echo "dark-mode"; else echo "light-mode"; ?> uk-height-1-1 uk-background-cover <?= $user_config->ui->theme ?> " style="background-image: url(/view/img/<?php if(isset($user_config->ui->theme)) echo $user_config->ui->theme; else echo "uk-dark"; ?>.jpg);">
   <script>
     $(document).ready(function() {
       $('.data-tables').DataTable({
@@ -126,7 +126,7 @@
       <button class="uk-offcanvas-close" type="button" uk-close></button>
       <?php require_once("aside-menu.inc.phtml"); ?>
 
-      <div class="uk-padding-small uk-text-small uk-position-bottom-left uk-text-muted">v. 0.6.6 beta</div>
+      <div class="uk-padding-small uk-text-small uk-position-bottom-left uk-text-muted"><a href="https://trello.com/invite/b/hGQiCypG/144cf859b96fcb7beaca2d5c9979c7cf/teepee" target="_blank">v. 0.6.6 beta</a></div>
       <div class="uk-padding-small uk-text-small uk-position-bottom-right ">
         <a class="uk-link-muted" href="http://matejelias.cz">© Matěj Eliáš</a>
       </div>

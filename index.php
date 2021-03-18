@@ -6,11 +6,9 @@
 #  42. p.h. Ostrava       #
 ###########################
 /*
-@author 
-Matěj Eliáš
+@author Matěj Eliáš
 2020
 Šíření pouze se souhlasem majitele
-
 */
 
   

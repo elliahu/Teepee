@@ -7,6 +7,7 @@
 */
 class MailKontroler extends Kontroler{
 
+  private $emailToShow;
   // Metoda zpracuj
   public function zpracuj($parametry){
     // Ověření přihlášení uživatele
@@ -30,85 +31,118 @@ class MailKontroler extends Kontroler{
         break;
 
       default:
+        $this->emailToShow = $parametry[0];
         $this->prehled();
         break;
     }
   }
 
   private function prehled(){
-    $this->pohled = "under_construction";
+    $this->pohled = "mail";
     $this->data["vsechnyEmaily"] = DB::vsechnyEmaily();
+
+    if(isset($this->emailToShow) && is_numeric(($this->emailToShow))){
+      $this->data["showEmail"] = DB::getEmail($this->emailToShow);
+      file_put_contents("model/emailViewerBuffer.html",$this->data["showEmail"]["zprava"]);
+    }
   }
 
   private function odeslat(){
-    $this->pohled="under_construction";
-    $emaily = DB::getPouzeEmaily();
-    foreach($emaily as $e){
-      $emailyPouze[] = $e["kontaktni_email"];
+    $this->pohled="mail-odeslat";
+
+    //Nacist emaily z databaze
+    $vsechnyKmeny = DB::vsechnyKmeny();
+    
+    $vsechnyKontaktniEmaily = array();
+    $i = 0;
+    foreach($vsechnyKmeny as $kmen){
+      $vsechnyKontaktniEmaily[$i] = array();
+      $vsechnyKontaktniEmaily[$i]["nazev"] = $kmen["nazev"];
+      $vsechnyKontaktniEmaily[$i]["id_kmenu"] = $kmen["id_kmenu"];
+      $vsechnyKontaktniEmaily[$i]["emaily"] = DB::getEmailyPoldeKmenu($kmen["id_kmenu"]);
+      $i++;
     }
-    $emailyPouze = implode(",",$emailyPouze);
-    $this->data["emailyAll"] = $emailyPouze;
+
+    $this->data["vsechnyEmaily"] = $vsechnyKontaktniEmaily;
+
+    //die("<pre>".print_r($vsechnyKontaktniEmaily)."</pre>");
+
     if(isset($_POST["odeslat"])){
-      if(!empty($_POST["to"]) && !empty($_POST["sub"]) && !empty($_POST["text"])){
-        $prijemce = $_POST["to"];
-        $prijmece = str_replace(" ","",$prijemce);
-        $prijemcePole = explode(",",$prijemce);
-        $predmet = $_POST["sub"];
-        $text = $_POST["text"];
+      // Poslat na adresu
+      if(isset($_POST["to"]) && !empty($_POST["to"])){
+        $to = $_POST["to"];
+        $to = str_replace(" ","",$to);
+        if(!empty(explode(",",$to)))
+          $sendToEmails = explode(",",$to);
+        else 
+          $sendToEmails = array();
+      }
 
-        $mail = new PHPMailer();
-        $mail->CharSet = 'UTF-8';
-        $mail->Encoding = 'base64';
-
-        $mail->setFrom("info@matejelias.cz",$_SESSION["uzivatel"]->jmeno." ".$_SESSION["uzivatel"]->prijmeni);
-        $mail->addAddress(array_shift($prijemcePole));
-        foreach($prijemcePole as $email)
-        {
-           $mail->addBCC($email);
-        }
-        //$mail->addBCC("ostrava@royalranger.cz");
-        $mail->Subject = $predmet;
-        $mail->isHTML(TRUE);
-        $mail->Body = '
-        <html style="box-sizing:border-box;padding:15px; width:100%;">
-        <div style="background-color:#fff;box-shadow: 0px 0px 23px -5px rgba(0,0,0,0.75);max-width:900px;">
-          <div style="width:100%;padding:15px;background: #159858;background: linear-gradient(30deg, #093637, #159957);">
-            <h1 style="color:#fff">Royal Rangers Ostrava</h1>
-          </div>
-          <div style="width:100%; padding:15px;">
-            <p>
-              '.$text.'
-            </p>
-          </div>
-          <div style="background-color:#f5f5f5;width:100%;padding:15px;>
-            <p>
-            Tato zpráva byla odeslána z evidenčního systému 42. p.h. Royal Rangers Ostrava
-            </p>
-          </div>
-        </div>
-        </html>
-        ';
-        $textDB = $mail->Body;
-        $mail->AltBody = $text;
-        $mail->addAttachment('/view/img/logo_dark.png', 'Royal_Rangers_logo.png');
-        $mail->addReplyTo("elias.matej@seznam.cz",$_SESSION["uzivatel"]->jmeno." ".$_SESSION["uzivatel"]->prijmeni);
-        if (!$mail->send())
-        {
-           /* PHPMailer error. */
-           $this->pridejZpravu("Email se nepodařilo odeslat - PHPMailer error: ".$mail->ErrorInfo, "danger");
-           $this->presmeruj("mail/odeslat");
-        }
-        else{
-          DB::pridatEmail($prijemce,$predmet,null,$textDB,$_SESSION["uzivatel"]->id_vedouciho);
-          $this->pridejZpravu("Email byl odeslán", "success");
-          $this->presmeruj("mail/odeslat");
+      //Checkboxy s kmeny
+      $kmeny = $_POST["kmeny"];
+      if(!empty($kmeny) && !isset($_POST["checkbox-vsichni"])){
+        for($i = 0; $i < count($kmeny); $i++){
+          $emaily = DB::getEmailyPoldeKmenu($kmeny[$i]);
+          foreach($emaily as $email){
+            $sendToEmails[] = $email["kontaktni_email"];
+          }
         }
       }
-      else{
-        $this->pridejZpravu("Nikdo nemá rád vyplňování, ale jinak to fungovat nebude !", "danger");
+
+      //Checkbox vedouci
+      if(isset($_POST["checkbox-vedouci"]) && !isset($_POST["checkbox-vsichni"])){
+        $emailyVedouci = DB::getPouzeEmailyVedoucich();
+        foreach($emailyVedouci as $email){
+          $sendToEmails[] = $email["email"];
+        }
+      }
+
+      //Chceckbox vsichni
+      if(isset($_POST["checkbox-vsichni"])){
+        $emailyDeti = DB::getPouzeEmaily();
+        $emailyVedouci = DB::getPouzeEmailyVedoucich();
+        foreach($emailyDeti as $email){
+          $sendToEmails[] = $email["kontaktni_email"];
+        }
+        foreach($emailyVedouci as $email){
+          $sendToEmails[] = $email["email"];
+        }
+      }
+      
+      //Kontrola vyplneni prijemcu
+      if(empty($sendToEmails)){
+        $this->pridejZpravu("Vyplňte příjemce","danger");
         $this->presmeruj("mail/odeslat");
       }
+      
+      //die("<pre>".print_r($sendToEmails)."</pre>");
+
+      //Predmet
+      if(isset($_POST["sub"])){
+        $subject = $_POST["sub"];
+      }
+      else{
+        $this->pridejZpravu("Vyplňte předmět !","danger");
+        $this->presmeruj("mail/odeslat");
+      }
+      
+      //Tělo emailu
+      if(isset($_POST["text"])){
+        $body = $_POST["text"];
+      }
+      else{
+        $this->pridejZpravu("Vyplňte tělo emailu !","danger");
+        $this->presmeruj("mail/odeslat");
+      }
+
+      //Odeslat
+      //MailManager::sendMail($sendToEmails,$subject,MailManager::intoFrame($body),$body);
+      //MailManager::sendMail(array("elias.matysek@gmail.com"),$subject,MailManager::intoFrame($body),$body);
+      DB::pridatEmail(implode(",",$sendToEmails),$subject,null,MailManager::intoFrame($body),$_SESSION["uzivatel"]->id_vedouciho);
+      $this->pridejZpravu("Zpráva byla odeslána","success");
+      $this->presmeruj("mail");
     }
+    
   }
 }
  ?>

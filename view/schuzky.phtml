@@ -3,8 +3,8 @@
   <a href="#pridat-schuzku" class="btn-orange" uk-toggle>Přidat schůzku</a>
   <a href="/schuzky/quick" uk-tooltip="Jedním kliknutím přidá běžnou schůzku s datem nejbližší středy" class="btn-green" uk-toggle>Rychlé přidání
     <?php
-    if (date('l', strtotime('Today')) != $config->schuzky->den)
-      echo date('d.n. Y', strtotime('next '.$config->schuzky->den));
+    if (date('l', strtotime('Today')) != $config->denSchuzky)
+      echo date('d.n. Y', strtotime('next '.$config->denSchuzky));
     else
       echo date('d.n. Y', strtotime('Today'));
     ?>
@@ -82,7 +82,7 @@
     <form class="" method="post">
       <div class="uk-margin-small">
         <label for="datum">Datum schůzky</label>
-        <input class="uk-input" id="datum" type="date" name="datum" value="<?= date('Y-m-d', strtotime('next '.$config->schuzky->den)) ?>">
+        <input class="uk-input" id="datum" type="date" name="datum" value="<?= date('Y-m-d', strtotime('next '.$config->denSchuzky)) ?>">
       </div>
       <div class="uk-margin-small">
         <label for="popis">Popis (nepovinné)</label>

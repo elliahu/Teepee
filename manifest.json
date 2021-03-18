@@ -1,0 +1,15 @@
+{
+    "short_name": "Teepee",
+    "name": "Teepee",
+    "icons": [
+    {
+    "src":"/view/img/favicon.png",
+    "sizes": "90x90",
+    "type": "image/png"
+    }
+    ],
+    "start_url": "/nastenka",
+    "background_color": "#0bab64",
+    "theme_color": "#0bab64",
+    "display": "standalone"
+  }

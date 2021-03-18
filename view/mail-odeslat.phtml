@@ -1,13 +1,23 @@
-<h1 class="uk-position-center uk-text-center">Under construction<br>:(</h1>
-<!--<form method="post">
+<!--<h1 class="uk-position-center uk-text-center">Under construction<br>:(</h1>-->
+<form method="post" class="uk-width-2-3@l uk-margin-auto">
+  
+
   <div class="uk-margin">
-    <a onclick="pridejVsechnyEmaily()" class="btn-orange">Všichni</a>
+    <div class="uk-inline uk-width-1-1">
+      <h2>Komu</h2>
+      <label><input id="uncheck" name="checkbox-vsichni" class="uk-checkbox uk-margin-left" type="checkbox" checked><span uk-tooltip="Děti + vedoucí"> Všichni</span></label>
+      <label><input name="checkbox-vedouci" onclick="uncheckFirst()" class="uk-checkbox uk-margin-left" type="checkbox"><span uk-tooltip="Pouze vedoucí"> Vedoucí</span></label>
+      <?php foreach($vsechnyEmaily as $kmeny){ ?>
+        <label><input value="<?= $kmeny["id_kmenu"] ?>" name="kmeny[]" onclick="uncheckFirst()" class="uk-checkbox uk-margin-left" type="checkbox"><?= " ".$kmeny["nazev"] ?> </label>
+          <?php } ?>
+
+    </div>
   </div>
 
   <div class="uk-margin">
     <div class="uk-inline uk-width-1-1">
       <span class="uk-form-icon" uk-icon="icon: users"></span>
-      <input class="uk-input" type="text" placeholder="Komu" name="to" id="to">
+      <input class="uk-input" type="text" placeholder="Komu dalšímu" name="to" id="to">
     </div>
   </div>
 
@@ -21,15 +31,21 @@
   <div class="uk-margin uk-height-1-1">
     <div class="uk-inline uk-width-1-1">
       <textarea id="tinyMCE" name="text"></textarea>
+      <script>
+        tinymce.init({
+          selector: 'textarea',
+          plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+          toolbar_mode: 'floating',
+          language: 'cs'
+      });
+      </script>
     </div>
   </div>
   <input type="submit" name="odeslat" value="Odeslat" class="btn-green">
   <input type="hidden" value="<?= $emailyAll ?>" name="emailyAll" id="emailyAll">
 </form>
-
-<script type="text/javascript">
-  function pridejVsechnyEmaily(){
-    document.getElementById("to").value = document.getElementById("emailyAll").value;
-  }
+<script>
+function uncheckFirst(){
+  document.getElementById('uncheck').checked = false;
+}
 </script>
--->

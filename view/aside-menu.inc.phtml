@@ -1,85 +1,86 @@
 <!-- kotva -->
 <div class="uk-width-1-1 uk-margin-top uk-padding-small uk-padding-remove-top">
   <img class="uk-hidden@m uk-align-center uk-margin-remove-bottom" src="/view/img/teepee-text-logo-beta.png" alt="Royal Rangers" style="max-height:70px;">
-        <ul class="uk-nav-default uk-nav-parent-icon" uk-nav>
-                <li><a class="uk-padding-remove-left" href="/nastenka"><span class="uk-margin-small-right" uk-icon="icon: thumbnails"></span> Nástěnka</a></li>
-                <li class="uk-parent">
-                    <a class="uk-padding-remove-left" href="#"><span class="uk-margin-small-right" uk-icon="icon: calendar"></span> Docházka</a>
-                    <ul class="uk-nav-sub">
-                      <?php
-                        $NejSchuzka = DB::nejblizsiSchuzka();
-                       ?>
-                      <li><a class="uk-padding-remove-left" href="/dochazka/<?php if($this->sessionCheck() === true ) echo $_SESSION["uzivatel"]->id_kmenu; ?>/<?php  if($this->sessionCheck() === true ) echo $NejSchuzka[0]["id_schuzky"];?>">
-                        <span class="uk-margin-small-right" uk-icon="icon: plus"></span>Zapsat body</a>
-                      </li>
-                      <li><a class="uk-padding-remove-left" href="/dochazka">
-                        <span class="uk-margin-small-right" uk-icon="icon: cog"></span>Spravce dochazky</a>
-                      </li>
-                    </ul>
-                </li>
-                <li>
-                    <a class="uk-padding-remove-left" href="/schuzky"><span class="uk-margin-small-right" uk-icon="icon: location"></span> Schůzky</a>
-                </li>
-                <li class="uk-parent">
-                    <a class="uk-padding-remove-left" href="#"><span class="uk-margin-small-right" uk-icon="icon: star"></span> Akce</a>
-                    <ul class="uk-nav-sub">
-                      <li><a class="uk-padding-remove-left" href="/akce">
-                        <span class="uk-margin-small-right" uk-icon="icon: list"></span>Přehled</a>
-                      </li>
-                        <li><a class="uk-padding-remove-left" href="/ucast-akce">
-                          <span class="uk-margin-small-right" uk-icon="icon: check"></span>Účast na akcích</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="uk-parent">
-                    <a class="uk-padding-remove-left" href="#"><span class="uk-margin-small-right" uk-icon="icon: user"></span> Vedoucí</a>
-                    <ul class="uk-nav-sub">
-                      <li><a class="uk-padding-remove-left" href="/vedouci">
-                        <span class="uk-margin-small-right" uk-icon="icon: users"></span>Přehled</a>
-                      </li>
-                        <li><a class="uk-padding-remove-left" href="/vedouci/novy">
-                          <span class="uk-margin-small-right" uk-icon="icon: plus"></span>Přidat vedoucího</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="uk-parent">
-                    <a class="uk-padding-remove-left" href="#"><span class="uk-margin-small-right" uk-icon="icon: users"></span> Děti</a>
-                    <ul class="uk-nav-sub ">
-                        <li><a class="uk-padding-remove-left" href="/deti">
-                          <span class="uk-margin-small-right" uk-icon="icon: users"></span>Přehled</a></li>
-                        <li><a class="uk-padding-remove-left" href="/deti/novy">
-                          <span class="uk-margin-small-right" uk-icon="icon: plus"></span>Přidat</a></li>
-                    </ul>
-                </li>
-                <li class="uk-parent">
-                    <a class="uk-padding-remove-left" href="#"><span class="uk-margin-small-right" uk-icon="icon: list"></span> Body</a>
-                    <ul class="uk-nav-sub ">
-                        <li><a class="uk-padding-remove-left" href="/body">
-                          <span class="uk-margin-small-right" uk-icon="icon: users"></span>Síň slávy</a></li>
-                        <li><a class="uk-padding-remove-left" href="/body/pridat">
-                          <span class="uk-margin-small-right" uk-icon="icon: plus"></span>Přidat</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a class="uk-padding-remove-left" href="/kmeny"><span class="uk-margin-small-right" uk-icon="icon: bolt"></span> Kmeny</a>
-                </li>
-                <li>
-                    <a class="uk-padding-remove-left" href="/statistika"><span class="uk-margin-small-right" uk-icon="icon: info"></span> Statistika</a>
-                </li>
-                <li class="uk-parent">
-                    <a class="uk-padding-remove-left" href="#"><span class="uk-margin-small-right" uk-icon="icon: mail"></span> Pošta</a>
-                    <ul class="uk-nav-sub ">
-                      <li><a class="uk-padding-remove-left" href="/mail/odeslat">
-                        <span class="uk-margin-small-right" uk-icon="icon: mail"></span>Nový</a></li>
-                        <li><a class="uk-padding-remove-left" href="/mail">
-                          <span class="uk-margin-small-right" uk-icon="icon: list"></span>Odeslaná pošta</a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a class="uk-padding-remove-left" href="/aplikace"><span class="uk-margin-small-right" uk-icon="icon: download"></span> Stáhnout aplikaci</a>
-                </li>
-                <li>
-                    <a class="uk-padding-remove-left" href="/nastaveni"><span class="uk-margin-small-right" uk-icon="icon: cog"></span> Nastavení aplikace</a>
-                </li>
-          </ul>
+  <ul class="uk-nav-default uk-nav-parent-icon uk-text-bold" uk-nav>
+    <li><a class="uk-padding-remove-left" href="/nastenka"><span class="uk-margin-small-right" uk-icon="icon: thumbnails"></span> Nástěnka</a></li>
+    <li class="uk-parent">
+      <a class="uk-padding-remove-left" href="#"><span class="uk-margin-small-right" uk-icon="icon: calendar"></span> Docházka</a>
+      <ul class="uk-nav-sub">
+        <?php
+        $NejSchuzka = DB::nejblizsiSchuzka();
+        ?>
+        <li><a class="uk-padding-remove-left" href="/dochazka/<?php if ($this->sessionCheck() === true) echo $_SESSION["uzivatel"]->id_kmenu; ?>/<?php if ($this->sessionCheck() === true) echo $NejSchuzka[0]["id_schuzky"]; ?>">
+            <span class="uk-margin-small-right" uk-icon="icon: plus"></span>Zapsat body</a>
+        </li>
+        <li><a class="uk-padding-remove-left" href="/dochazka">
+            <span class="uk-margin-small-right" uk-icon="icon: cog"></span>Spravce dochazky</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a class="uk-padding-remove-left" href="/schuzky"><span class="uk-margin-small-right" uk-icon="icon: location"></span> Schůzky</a>
+    </li>
+    <li class="uk-parent">
+      <a class="uk-padding-remove-left" href="#"><span class="uk-margin-small-right" uk-icon="icon: star"></span> Akce</a>
+      <ul class="uk-nav-sub">
+        <li><a class="uk-padding-remove-left" href="/akce">
+            <span class="uk-margin-small-right" uk-icon="icon: list"></span>Přehled</a>
+        </li>
+        <li><a class="uk-padding-remove-left" href="/ucast-akce">
+            <span class="uk-margin-small-right" uk-icon="icon: check"></span>Účast na akcích</a>
+        </li>
+      </ul>
+    </li>
+    <li class="uk-parent">
+      <a class="uk-padding-remove-left" href="#"><span class="uk-margin-small-right" uk-icon="icon: user"></span> Vedoucí</a>
+      <ul class="uk-nav-sub">
+        <li><a class="uk-padding-remove-left" href="/vedouci">
+            <span class="uk-margin-small-right" uk-icon="icon: users"></span>Přehled</a>
+        </li>
+        <li><a class="uk-padding-remove-left" href="/vedouci/novy">
+            <span class="uk-margin-small-right" uk-icon="icon: plus"></span>Přidat vedoucího</a>
+        </li>
+      </ul>
+    </li>
+    <li class="uk-parent">
+      <a class="uk-padding-remove-left" href="#"><span class="uk-margin-small-right" uk-icon="icon: users"></span> Děti</a>
+      <ul class="uk-nav-sub ">
+        <li><a class="uk-padding-remove-left" href="/deti">
+            <span class="uk-margin-small-right" uk-icon="icon: users"></span>Přehled</a></li>
+        <li><a class="uk-padding-remove-left" href="/deti/novy">
+            <span class="uk-margin-small-right" uk-icon="icon: plus"></span>Přidat</a></li>
+      </ul>
+    </li>
+    <li class="uk-parent">
+      <a class="uk-padding-remove-left" href="#"><span class="uk-margin-small-right" uk-icon="icon: list"></span> Body</a>
+      <ul class="uk-nav-sub ">
+        <li><a class="uk-padding-remove-left" href="/body">
+            <span class="uk-margin-small-right" uk-icon="icon: users"></span>Síň slávy</a></li>
+        <li><a class="uk-padding-remove-left" href="/body/pridat">
+            <span class="uk-margin-small-right" uk-icon="icon: plus"></span>Přidat</a></li>
+      </ul>
+    </li>
+    <li>
+      <a class="uk-padding-remove-left" href="/kmeny"><span class="uk-margin-small-right" uk-icon="icon: bolt"></span> Kmeny</a>
+    </li>
+    <li>
+      <a class="uk-padding-remove-left" href="/statistika"><span class="uk-margin-small-right" uk-icon="icon: info"></span> Statistika</a>
+    </li>
+    <li class="uk-parent">
+      <a class="uk-padding-remove-left" href="#"><span class="uk-margin-small-right" uk-icon="icon: mail"></span> Pošta</a>
+      <ul class="uk-nav-sub ">
+        <li><a class="uk-padding-remove-left" href="/mail">
+            <span class="uk-margin-small-right" uk-icon="icon: list"></span>Odeslaná pošta</a></li>
+        <li><a class="uk-padding-remove-left" href="/mail/odeslat">
+            <span class="uk-margin-small-right" uk-icon="icon: mail"></span>Nový</a></li>
+
+      </ul>
+    </li>
+    <li>
+      <a class="uk-padding-remove-left" href="/aplikace"><span class="uk-margin-small-right" uk-icon="icon: download"></span> Stáhnout aplikaci</a>
+    </li>
+    <li>
+      <a class="uk-padding-remove-left" href="/nastaveni"><span class="uk-margin-small-right" uk-icon="icon: cog"></span> Nastavení aplikace</a>
+    </li>
+  </ul>
 </div>

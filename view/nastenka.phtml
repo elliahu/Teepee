@@ -63,30 +63,26 @@
   </div>
   <div class="uk-width-1-1 uk-padding uk-padding-remove-left uk-padding-remove-right uk-animation-slide-bottom-small">
     <div id="prechody" class="uk-padding-top">
-      <div class="uk-grid-match uk-child-width-expand@s" uk-grid>
-        <div>
-          <!-- <div class="response"></div>
-          <button onclick="testAPI(xmlhttp)">Test API</button>
-          <script>
-            var xmlhttp = new XMLHttpRequest(); 
-            xmlhttp.onreadystatechange = function() {
-              if (this.readyState == 4 && this.status == 200) {
-                document.querySelector('.response').innerHTML = this.responseText;
-              }
-              if (this.status == 404){
-                document.querySelector('.response').innerHTML = this.status;
-              }
-            };
-
-            function testAPI(xmlhttp) {
-              xmlhttp.open("POST", "/api/kmen?token=<?= $config->apiToken ?>");
-              xmlhttp.setRequestHeader("Content-Type", "application/json");
-              xmlhttp.send(JSON.stringify([["id_kmenu",1]]));
-            }
-          </script> -->
-          
-        </div>
-        <div>
+      <div class="uk-child-width-expand@s" uk-grid>
+        <!-- <div>
+          <?php if ($zadnePrechody) {
+            ?><h3>Přechody mezi kmeny</h3> <?php
+            foreach ($prechody as $n) { ?>
+              <div id="prechod-<?= $n["id_rangera"] ?>" class="uk-padding-small uk-width-1-1 orange2-gradient uk-margin-small uk-margin-remove-left uk-margin-remove-right uk-border-rounded uk-light" uk-grid>
+                <div class="uk-width-expand@s uk-padding-remove">
+                  <p class="uk-text-left"><b><?= $n["jmeno"] . " " . $n["prijmeni"] ?><b> &NonBreakingSpace;&NonBreakingSpace;&NonBreakingSpace;<?= $this->acronym($n["nazev"]) ?><span uk-icon="chevron-right"></span> <?= $this->acronym($n["navrhovanyKmen"]["nazev"]) ?> </b>
+                  </p>
+                </div>
+                <div class="uk-width-auto@s uk-padding-remove">
+                  <a uk-tooltip="Provést přechod z <?= $n["nazev"] ?> do <?= $n["navrhovanyKmen"]["nazev"] ?>" onclick="prechod(<?= $n['id_rangera'] ?>,<?= $n['navrhovanyKmen']['id_kmenu'] ?>)" class="uk-text-left"><span uk-icon="icon: arrow-right; ratio: 2"></span></a>
+                </div>
+              </div>
+            <?php }
+          } /*else { ?>
+            <p>Žádné přechody mezi kmeny. Poku bude mít někdo věk na přechod do vyšší věkové kategorie, zobrazí se tady.</p>
+          <?php } */?>
+        </div> -->
+        <div class="uk-width-1-2@m">
           <h3>Narozeniny v tomto týdnu</h3>
           <?php if ($zadneNarozeniny) {
             foreach ($narozeniny as $n) { ?>
@@ -107,3 +103,15 @@
     </div>
   </div>
 </div>
+<script>
+  function prechod(id_rangera, id_kmenu) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          document.querySelector('#prechod-'+id_rangera).style.display = "none";
+        }
+      };
+      xhttp.open("POST", "/api/ranger?token=7Cdo7hIrdiT", true);
+      xhttp.send(JSON.stringify([{"id_rangera":id_rangera,"id_kmenu":id_kmenu}]));
+  }
+</script>

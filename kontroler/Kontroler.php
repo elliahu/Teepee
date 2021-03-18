@@ -7,8 +7,6 @@
     //abstraktní třída kontroler
     protected $pohled = "";
     protected $data = array();
-    protected $colorGenerator;
-    protected $mailManager;
 
 
     //abstraktní metoda zpracuj

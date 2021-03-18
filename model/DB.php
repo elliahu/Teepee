@@ -244,6 +244,27 @@ class DB {
     return $navrat->fetchAll();
   }
 
+  public static function getPouzeEmailyVedoucich(){
+    $sql = "SELECT email FROM vedouci";
+    $navrat = self::$spojeni->prepare($sql);
+    $navrat->execute();
+    return $navrat->fetchAll();
+  }
+
+  public static function getEmailyPoldeKmenu($IdKmenu = null){
+    if($IdKmenu != null){
+      $sql = "SELECT kontaktni_email,jmeno,prijmeni FROM ranger JOIN kmen USING(id_kmenu) WHERE id_kmenu = ?";
+      $navrat = self::$spojeni->prepare($sql);
+      $navrat->execute(array($IdKmenu));  
+    }  
+    else {
+      $sql = "SELECT kontaktni_email FROM ranger";
+      $navrat = self::$spojeni->prepare($sql);
+      $navrat->execute(); 
+    }
+    return $navrat->fetchAll();
+  }
+
   public static function smazatKmen($id){
     $sql = "DELETE FROM kmen WHERE id_kmenu = ?";
     $navrat = self::$spojeni->prepare($sql);
@@ -850,10 +871,10 @@ class DB {
               $sql.=",";
           }
           if(is_string($data[$dataKeys[0]]))
-            $sql .= "WHERE ".$dataKeys[0]." LIKE '".$data[$dataKeys[0]]."'";
+            $sql .= " WHERE ".$dataKeys[0]." LIKE '".$data[$dataKeys[0]]."'";
           else
-            $sql .= "WHERE ".$dataKeys[0]." = ".$data[$dataKeys[0]];
-
+            $sql .= " WHERE ".$dataKeys[0]." = ".$data[$dataKeys[0]];
+          echo $sql;
           $navrat = self::$spojeni->prepare($sql);
           $navrat->execute();
       }

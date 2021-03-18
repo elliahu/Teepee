@@ -14,20 +14,20 @@
                     <h2>Uživatelské rozhraní</h2>
                     <p>Vyberte režim aplikace:</p>
                     <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-                        <label><input class="uk-radio" type="radio" name="theme" value="uk-dark" <?php if ($user_config->ui->theme == "uk-dark") echo "checked" ?>> Light</label>
-                        <label><input class="uk-radio" type="radio" name="theme" value="uk-light" <?php if ($user_config->ui->theme == "uk-light") echo "checked" ?> disabled> Dark (již brzy)</label>
+                        <label><input class="uk-radio" type="radio" name="UIdesign" value="uk-dark" <?php if ($user_config->UIdesign == "uk-dark") echo "checked" ?>> Light</label>
+                        <label><input class="uk-radio" type="radio" name="UIdesign" value="uk-light" <?php if ($user_config->UIdesign == "uk-light") echo "checked" ?> disabled> Dark (již brzy)</label>
                     </div>
                     <h2>Upozornění</h2>
                     <!--
                     <p>Zobrazovat uozornění:</p>
                     <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-                        <label><input class="uk-radio" type="radio" name="zobrazovat" value="true" <?php if ($user_config->upozorneni->zobrazovat == "true") echo "checked" ?>> Zobrazovat</label>
-                        <label><input class="uk-radio" type="radio" name="zobrazovat" value="false" <?php if ($user_config->upozorneni->zobrazovat == "false") echo "checked" ?> onclick="return confirm('Nebudou se zobrazovat ŽÁDNÉ upozornění. To znamená že se nezobrazí ani chyby. Opravdu to chcete udělat ?')"> Nezobrazovat</label>
+                        <label><input class="uk-radio" type="radio" name="zobrazovatUpozorneni" value="true" <?php if ($user_config->zobrazovatUpozorneni == "true") echo "checked" ?>> Zobrazovat</label>
+                        <label><input class="uk-radio" type="radio" name="zobrazovatUpozorneni" value="false" <?php if ($user_config->zobrazovatUpozorneni == "false") echo "checked" ?> onclick="return confirm('Nebudou se zobrazovat ŽÁDNÉ upozornění. To znamená že se nezobrazí ani chyby. Opravdu to chcete udělat ?')"> Nezobrazovat</label>
                     </div> -->
                     <div class="uk-margin">
                         <label class="uk-form-label" for="zacatek">Skrýt upozornění po</label>
                         <div class="uk-form-controls">
-                            <input class="uk-input uk-form-width-small" type="number" placeholder="vteřiny" name="cas" value="<?= $user_config->upozorneni->skrytPo ?>">
+                            <input class="uk-input uk-form-width-small" type="number" placeholder="vteřiny" name="skrytUpozorneniPo" min="1" max="10" value="<?= $user_config->skrytUpozorneniPo ?>">
                             <span> vteřinách</span>
                         </div>
                     </div>

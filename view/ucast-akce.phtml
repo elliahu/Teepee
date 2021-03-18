@@ -93,20 +93,20 @@
 <script>
   function omluven(id) {
     var input = document.getElementById(id);
-    if (input.value == <?= $config->body->akce->omluven ?>)
+    if (input.value == <?= $config->akceOmluven?>)
       input.value = 0;
     else
-      input.value = <?= $config->body->akce->omluven ?>;
+      input.value = <?= $config->akceOmluven ?>;
   }
 
   function pritomen(id) {
     var input = document.getElementById(id);
-    input.value = <?= $config->body->akce->pritomen ?>;
+    input.value = <?= $config->akcePritomen ?>;
   }
 
   function chybi(id) {
     var input = document.getElementById(id);
-    input.value = <?= $config->body->akce->neomluven ?>;
+    input.value = <?= $config->akceNeomluven ?>;
   }
 
   function plus(id) {

@@ -5,7 +5,7 @@
 class MailManager{
     
     // Pošle email protokolem SMTP, možnost poslat kopie a prilohy
-    public function posliMail($komu = array(), $predmet, $telo, $teloAlt, $prilohy = array(), $CC = null){
+    public static function sendMail($komu = array(), $predmet, $telo, $teloAlt, $prilohy = array(), $CC = null){
         //SMTP nastavení -> zmeny v init.php
         $mail = new PHPMailer(true);
         //$mail->SMTPDebug = SMTPDebug;                     
@@ -53,7 +53,7 @@ class MailManager{
     }
 
     //Metoda se používá pro obalení těla emailu do šablony
-    public function intoFrame($obsah){
+    public static function intoFrame($obsah){
         //šablona uložená v view/mail_frame/
         return file_get_contents("view/mail_frame/app-top.html").$obsah.file_get_contents("view/mail_frame/app-bottom.html");
     }

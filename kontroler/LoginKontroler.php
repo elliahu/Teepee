@@ -115,7 +115,6 @@
     }
 
     private function zaslatResetEmail($email,$login){
-      $mailManager = new MailManager();
       $resetManger = new PasswordResetManager();
       $token = $resetManger->addRequest($login,$email);
       global $config;
@@ -128,7 +127,7 @@
 
         Budete přesměrováni na stránku, kde si vytvoříte nové heslo.
       ";
-      $mailManager->posliMail(array($email), "Resetování hesla", $mailManager->intoFrame($telo),strip_tags($telo));
+      MailManager::sendMail(array($email), "Resetování hesla", MailManager::intoFrame($telo),strip_tags($telo));
     }
 
     private function zmenaHesla($token){
@@ -140,14 +139,13 @@
             if (preg_match("#.*^(?=.{8,20})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$#", $_POST["nove_heslo"])){
               DB::upravHeslo(array(password_hash($_POST["nove_heslo"],PASSWORD_DEFAULT),$request["id"]));
               $this->pridejZpravu("Úspěšně jste si změnili heslo. Nyní se přihlaste novým heslem.","default");
-              $mailManager = new MailManager();
               $telo = "
                 <h1>Resetovali jste si heslo</h1>
                 Tímto potvrzujeme resetování hesla v aplikaci Teepee pro uživatele <b>".$request["jmeno"]."</b><br>
                 Nyní se již přihlašujte pod novým heslem.<br><br>
                 <em>Pokud jste to nebyli vy, kontaktujte správce </em>
               ";
-              $mailManager->posliMail(array($request["email"]),"Resetovali jste si heslo",$mailManager->intoFrame($telo),strip_tags($telo));
+              MailManager::sendMail(array($request["email"]),"Resetovali jste si heslo",MailManager::intoFrame($telo),strip_tags($telo));
               $resetManger = new PasswordResetManager();
               $resetManger->completeRequest($token);
               $this->presmeruj("login");
@@ -172,6 +170,11 @@
     private function overToken($token){
       $resetManger = new PasswordResetManager();
       return $resetManger->verifyToken($token);
+    }
+
+    public static function refreshUserConfig(){
+      $user_config = json_decode(file_get_contents("cfg/user_cfg/user_cfg_".$_SESSION["uzivatel"]->id_vedouciho.".json"));
+      $_SESSION["user_config"] = $user_config;
     }
   }
  ?>

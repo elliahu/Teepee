@@ -64,6 +64,7 @@ class VedouciKontroler extends Kontroler{
     }
     else{
       if(!empty($_POST)){
+      
         if(!empty($_POST["jmeno"]) && !empty($_POST["prijmeni"])
         && !empty($_POST["datum_narozeni"]) && !empty($_POST["email"]) && !empty($_POST["tel"])
         && !empty($_POST["uz_jmeno"]) && !empty($_POST["heslo"]) && !empty($_POST["conf_heslo"])

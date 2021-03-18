@@ -44,8 +44,6 @@ class RouterKontroler extends Kontroler{
     $this->data["zpravy"] = $this->vratZpravy();
     $this->data["historie_zprav"] = $this->vratHistoriiZprav();
     $this->data["user_config"] = $this->nasctiUserConfig((isset($_SESSION["login"]) && $_SESSION["login"] === true)? true : false );
-    $this->kontroler->colorGenerator = new ColorGenerator();
-    $this->kontroler->mailManager = new MailManager();
     $this->pohled = "template";
   }
 
