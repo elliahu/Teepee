@@ -778,6 +778,80 @@ class DB {
       return $navrat["prumer"];
     }
 
+    public static function statistikaDetiPrubehPoTydnech($id_rangera){
+      /*
+        Vrací statistiku rangera po tydnech
+      */
+      $sql_dataset = "SELECT ucast_schuzka.id_rangera as id,ucast_schuzka.pocet_bodu as body,datum from ucast_schuzka join ranger using(id_rangera) join schuzka using(id_schuzky) WHERE ranger.id_rangera = ?";
+      $navrat = self::$spojeni->prepare($sql_dataset);
+      $navrat->execute(array($id_rangera));
+      return $navrat->fetchAll();
+    }
+
+    public static function statistikaDetiPrumernaUcastNaSchuzkach($id_rangera){
+      $sql = "SELECT COUNT(id_rangera) as pritomen FROM ucast_schuzka WHERE id_rangera = ? AND stav LIKE 'pritomen'";
+      $ucastPritomen = self::$spojeni->prepare($sql);
+      $ucastPritomen->execute(array($id_rangera));
+      $ucastPritomen = $ucastPritomen->fetch();
+      $sql = "SELECT COUNT(id_rangera) as nepritomen FROM ucast_schuzka WHERE id_rangera = ? AND (stav LIKE 'neomluven' OR stav LIKE 'omluven')";
+      $ucastNepritomen = self::$spojeni->prepare($sql);
+      $ucastNepritomen->execute(array($id_rangera));
+      $ucastNepritomen = $ucastNepritomen->fetch();
+
+      $a = $ucastPritomen["pritomen"];
+      $b = $ucastNepritomen["nepritomen"];
+      if($a == 0 ){
+        return 0;
+      }
+      return ( 100 * ($a / ( $a + $b)));
+
+    }
+
+    public static function statistikaDetiPritomen($id_rangera){
+      /*
+        Vrati pocet kolikrat bylo dite pritomno (int)
+      */
+      $sql = "SELECT COUNT(id_rangera) as pritomen FROM ucast_schuzka WHERE id_rangera = ? AND stav LIKE 'pritomen'";
+      $ucastPritomen = self::$spojeni->prepare($sql);
+      $ucastPritomen->execute(array($id_rangera));
+      $ucastPritomen = $ucastPritomen->fetch();
+      return $ucastPritomen["pritomen"];
+    }
+
+    public static function statistikaDetiNepritomen($id_rangera){
+      /*
+        Vrati pocet kolikrat bylo dite nepritomno (int)
+      */
+      $sql = "SELECT COUNT(id_rangera) as nepritomen FROM ucast_schuzka WHERE id_rangera = ? AND (stav LIKE 'neomluven' OR stav LIKE 'omluven')";
+      $ucastNepritomen = self::$spojeni->prepare($sql);
+      $ucastNepritomen->execute(array($id_rangera));
+      $ucastNepritomen = $ucastNepritomen->fetch();
+      return $ucastNepritomen["nepritomen"];
+    }
+
+    public static function statistikaDetiOmluvenaAbsence($id_rangera){
+      /*
+        Vrati procentualni omluvenou absenci ditete
+      */
+      $sql = "SELECT COUNT(id_rangera) as pritomen FROM ucast_schuzka WHERE id_rangera = ? AND stav LIKE 'omluven'";
+      $ucastPritomen = self::$spojeni->prepare($sql);
+      $ucastPritomen->execute(array($id_rangera));
+      $ucastPritomen = $ucastPritomen->fetch();
+      $sql = "SELECT COUNT(id_rangera) as nepritomen FROM ucast_schuzka WHERE id_rangera = ? AND stav LIKE 'neomluven'";
+      $ucastNepritomen = self::$spojeni->prepare($sql);
+      $ucastNepritomen->execute(array($id_rangera));
+      $ucastNepritomen = $ucastNepritomen->fetch();
+
+      $a = $ucastPritomen["pritomen"];
+      $b = $ucastNepritomen["nepritomen"];
+      if($a == 0 ){
+        return 0;
+      }
+      return ( 100 * ($a / ( $a + $b)));
+    }
+
+
+
     #########################################
     ###########     API #####################
     #########################################

@@ -1,121 +1,176 @@
-
 <div uk-grid>
-  <div class="uk-width-1-2@m">
+  <div class="uk-width-2-3@l uk-margin-auto">
     <div class="uk-grid-small uk-flex-middle" uk-grid>
-              <div class="uk-width-auto orange2-gradient uk-light uk-padding-small uk-border-rounded uk-text-center uk-margin-left">
-                  <h2 class="uk-heading-medium uk-padding-small uk-padding-remove-bottom"><?= $dite->pocet_bodu ?></h2><span>Počet bodů</span>
-              </div>
-              <div class="uk-width-expand">
-                  <h3 class="uk-card-title uk-margin-remove-bottom">
-                    <?php
-                      echo $dite->jmeno;
-                      if($dite->prezdivka != null){?>
-                        <?php
-                        echo $dite->prezdivka;
-                      } ?>
-                    <?php
-                      echo $dite->prijmeni;
-                    ?>
-                  </h3>
-                  <p class="uk-text-meta uk-margin-remove-top">
-                    <?= $dite->kmen->nazev ?>
-                  </p>
+      <a href="/body/pridat/<?= $dite->id_rangera ?>">
+        <div class="uk-width-auto green-gradient uk-light uk-padding uk-border-rounded uk-text-center uk-margin-left">
+          <h2 class="uk-heading-medium uk-padding-small uk-padding-remove-bottom"><?= $dite->pocet_bodu ?></h2><span>Počet bodů</span>
+        </div>
+      </a>
+      <div class="uk-width-expand">
+        <h2 class=" uk-margin-remove-bottom">
+          <?php
+          echo $dite->jmeno;
+          if ($dite->prezdivka != null) { ?>
+          <?php
+            echo $dite->prezdivka;
+          } ?>
+          <?php
+          echo $dite->prijmeni;
+          ?>
+        </h2>
+        <p class="uk-text-meta uk-margin-remove-top">
+          <?= $dite->kmen->nazev ?>
+        </p>
+        <p class="uk-text uk-margin-remove">
+          <span uk-icon="icon: calendar"></span>
+          <?= date("j.n. Y", strtotime($dite->datum_narozeni)); ?>
+        </p>
+        <p class="uk-text uk-margin-remove">
+          <span uk-icon="icon: mail"></span>
+          <?= $dite->kontaktni_email ?>
+        </p>
+        <p class="uk-text uk-margin-remove">
+          <span uk-icon="icon: receiver"></span>
+          <?= $dite->kontaktni_tel ?>
+        </p>
+        <p class="uk-text uk-margin-remove-bottom">
+          <a class="uk-margin-right" uk-toggle="target: #uprava-profilu"><span uk-icon="icon: pencil"></span> Upravit profil</a>
+        </p>
+      </div>
 
-                  <a href="/body/pridat/<?= $dite->id_rangera ?>" class="btn-green" uk-icon="plus"></a>
-              </div>
+    </div>
+
+    <div class="uk-padding-small uk-padding-remove-top">
+      <h2>Statistika</h2>
+      <canvas id="prubeh" class="uk-width-1-1"></canvas>
+      <script>
+        var ctx = document.getElementById('prubeh').getContext('2d');
+        var myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: [
+              <?php
+              foreach ($prubeh as $schuzka) {
+                echo "'" . date("j.n. Y", strtotime($schuzka["datum"])) . "',";
+              }
+              ?>
+            ],
+            datasets: [{
+              label: 'Počet bodů v průběhu roku',
+              data: [
+                <?php
+                $body = 0;
+                foreach ($prubeh as $schuzka) {
+                  $body += $schuzka["body"];
+                  echo $body . ",";
+                }
+                ?>
+              ],
+              borderColor: [
+                "rgb(21, 153, 87)"
+              ],
+              backgroundColor: [
+                "rgba(21, 153, 87,0.7)"
+              ],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
+            }
+          }
+        });
+      </script>
+    </div>
+
+    <div class="uk-padding-small uk-padding-remove-top uk-margin-remove" uk-grid>
+
+      <div class="uk-width-1-1 uk-padding-small" uk-tooltip="Průměrná účast na schůzkách vyjádřena procentuálně">
+        <div class="uk-width-auto uk-background-muted uk-dark  uk-padding uk-border-rounded uk-text-center">
+        <h2 class="uk-heading-medium uk-padding-small uk-padding-remove-bottom"><?= $prumernaUcastSchuzky." %" ?></h2><span>Účast na schůzkách</span>
+        </div>
       </div>
-      <div class="uk-width-1-1 uk-padding-small uk-padding-remove-left">
-        <h3>Profilové informace</h3>
-        <?php if(($_SESSION["uzivatel"]->uroven >= SUPERUSER)) {?>
-          <a class="btn-green" uk-toggle="target: #uprava-profilu">Upravit profil</a>
-        <?php } ?>
+        
+      <div class="uk-width-1-3 uk-padding-small uk-margin-remove-top" uk-tooltip="Kolikrát byl/a přítomen/na na schůzkách (počet)">
+        <div class="uk-width-auto uk-background-muted uk-dark  uk-padding uk-border-rounded uk-text-center">
+          <h2 class="uk-heading-medium uk-padding-small uk-padding-remove-bottom"><?= $pritomen ?></h2><span>Přítomen</span>
+        </div>
       </div>
-      <div class="uk-width-1-1">
-        <table class="uk-text-left uk-table uk-table-divider">
-          <tbody>
-            <tr>
-              <th class="uk-width-small">Jméno</th>
-              <td><?= $dite->jmeno ?></td>
-            </tr>
-            <tr>
-              <th class="uk-width-small">Přezdívka</th>
-              <td><?= $dite->prezdivka ?></td>
-            </tr>
-            <tr>
-              <th class="uk-width-small">Příjmení</th>
-              <td><?= $dite->prijmeni ?></td>
-            </tr>
-            <tr>
-              <th class="uk-width-small">Datum narození</th>
-              <td><?= $dite->datum_narozeni ?></td>
-            </tr>
-            <tr>
-              <th class="uk-width-small">Kontaktní email</th>
-              <td><?= $dite->kontaktni_email ?></td>
-            </tr>
-            <tr>
-              <th class="uk-width-small">Kontaktní telefon</th>
-              <td><?= $dite->kontaktni_tel ?></td>
-            </tr>
-            <tr>
-              <th class="uk-width-small">Kmen</th>
-              <td><?= $dite->kmen->nazev ?></td>
-            </tr>
-          </tbody>
-        </table>
+
+      <div class="uk-width-1-3 uk-padding-small uk-margin-remove-top" uk-tooltip="Kolikrát nebyl/la přítomen/na na schůzkách. Omluven/na nebo neomluven/na (počet)">
+        <div class="uk-width-auto uk-background-muted uk-dark  uk-padding uk-border-rounded uk-text-center">
+          <h2 class="uk-heading-medium uk-padding-small uk-padding-remove-bottom"><?= $nepritomen ?></h2><span>Nepřítomen</span>
+        </div>
       </div>
+
+      <div class="uk-width-1-3 uk-padding-small uk-margin-remove-top" uk-tooltip="Kolik procent absence bylo omluveno">
+        <div class="uk-width-auto uk-background-muted uk-dark  uk-padding uk-border-rounded uk-text-center">
+          <?php if($nepritomen != 0) {?>
+          <h2 class="uk-heading-medium uk-padding-small uk-padding-remove-bottom"><?= $omluvenaAbsence." %" ?></h2><span>Omluvená absence</span>
+          <?php } else {?>
+          <h2 class="uk-heading-medium uk-padding-small uk-padding-remove-bottom">X</h2><span>Omluvená absence</span>
+          <?php } ?>
+        </div>
+      </div>
+
+      
+    </div>
   </div>
 </div>
 <div id="uprava-profilu" uk-modal>
-    <div class="uk-modal-dialog uk-modal-body">
-        <h2 class="uk-modal-title">Úprava profilu dítěte</h2>
-        <form class="uk-form" method="post">
-          <div class="uk-margin-small">
-            <label for="jmeno">Jméno</label>
-            <input class="uk-input" id="jmeno" type="text" name="jmeno" value="<?= $dite->jmeno ?>">
-          </div>
-          <div class="uk-margin-small">
-            <label for="prezdivka">Přezdívka (není povinné)</label>
-            <input class="uk-input" id="prezdivka" type="text" name="prezdivka" value="<?= $dite->prezdivka ?>">
-          </div>
-          <div class="uk-margin-small">
-            <label for="prijmeni">Příjmení</label>
-            <input class="uk-input" id="prijmeni" type="text" name="prijmeni" value="<?= $dite->prijmeni ?>">
-          </div>
-          <div class="uk-margin-small">
-            <label for="datNar">Datum narození</label>
-            <input class="uk-input" id="datNar" type="date" name="datum_narozeni" value="<?= $dite->datum_narozeni ?>">
-          </div>
-          <div class="uk-margin-small">
-            <label for="email">Email</label>
-            <input class="uk-input" id="email" type="email" name="email" value="<?= $dite->kontaktni_email ?>">
-          </div>
-          <div class="uk-margin-small">
-            <label for="tel">Telefon</label>
-            <input class="uk-input" id="tel" type="tel" name="tel" value="<?= $dite->kontaktni_tel ?>">
-          </div>
-          <div class="uk-margin-small">
-            <label for="kmen">Kmen</label>
-            <select class="uk-select" id="kmen" name="id_kmenu">
-              <?php
-                $kmeny = DB::vsechnyKmeny();
-                foreach($kmeny as $kmen){
-                  if($kmen["nazev"] != $dite->kmen->nazev ){
-                    echo "<option value='".$kmen["id_kmenu"]."'>".$kmen["nazev"]."</option>" ;
-                  }
-                  else{
-                    echo "<option value='".$kmen["id_kmenu"]."' selected>".$kmen["nazev"]."</option>" ;
-                  }
-                }
-               ?>
-            </select>
-          </div>
-          <div class="uk-text-right">
-            <a class="uk-modal-close btn-orange" type="button">Zrušit</a>
-            <button type="submit" class="btn-green" name="profil">Uložit</button>
-          </div>
-        </form>
-    </div>
+  <div class="uk-modal-dialog uk-modal-body">
+    <h2 class="uk-modal-title">Úprava profilu dítěte</h2>
+    <form class="uk-form" method="post">
+      <div class="uk-margin-small">
+        <label for="jmeno">Jméno</label>
+        <input class="uk-input" id="jmeno" type="text" name="jmeno" value="<?= $dite->jmeno ?>">
+      </div>
+      <div class="uk-margin-small">
+        <label for="prezdivka">Přezdívka (není povinné)</label>
+        <input class="uk-input" id="prezdivka" type="text" name="prezdivka" value="<?= $dite->prezdivka ?>">
+      </div>
+      <div class="uk-margin-small">
+        <label for="prijmeni">Příjmení</label>
+        <input class="uk-input" id="prijmeni" type="text" name="prijmeni" value="<?= $dite->prijmeni ?>">
+      </div>
+      <div class="uk-margin-small">
+        <label for="datNar">Datum narození</label>
+        <input class="uk-input" id="datNar" type="date" name="datum_narozeni" value="<?= $dite->datum_narozeni ?>">
+      </div>
+      <div class="uk-margin-small">
+        <label for="email">Email</label>
+        <input class="uk-input" id="email" type="email" name="email" value="<?= $dite->kontaktni_email ?>">
+      </div>
+      <div class="uk-margin-small">
+        <label for="tel">Telefon</label>
+        <input class="uk-input" id="tel" type="tel" name="tel" value="<?= $dite->kontaktni_tel ?>">
+      </div>
+      <div class="uk-margin-small">
+        <label for="kmen">Kmen</label>
+        <select class="uk-select" id="kmen" name="id_kmenu">
+          <?php
+          $kmeny = DB::vsechnyKmeny();
+          foreach ($kmeny as $kmen) {
+            if ($kmen["nazev"] != $dite->kmen->nazev) {
+              echo "<option value='" . $kmen["id_kmenu"] . "'>" . $kmen["nazev"] . "</option>";
+            } else {
+              echo "<option value='" . $kmen["id_kmenu"] . "' selected>" . $kmen["nazev"] . "</option>";
+            }
+          }
+          ?>
+        </select>
+      </div>
+      <div class="uk-text-right">
+        <a class="uk-modal-close btn-orange" type="button">Zrušit</a>
+        <button type="submit" class="btn-green" name="profil">Uložit</button>
+      </div>
+    </form>
+  </div>
 </div>
 
 </div>

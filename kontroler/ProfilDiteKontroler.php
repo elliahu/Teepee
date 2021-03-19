@@ -12,12 +12,17 @@ class ProfilDiteKontroler extends Kontroler{
       $dite = DB::getDite($IDprofilu);
       $dite->kmen = DB::getKmen($dite->id_kmenu);
       $this->data["dite"] = $dite;
+      // statistika ditete
+      $this->statistika($IDprofilu);
     }
     else{
       $this->presmeruj("deti");
     }
     $this->pohled = "profil-dite";
     $this->upravProfil();
+    
+    
+    
   }
 
   private function upravProfil(){
@@ -50,6 +55,17 @@ class ProfilDiteKontroler extends Kontroler{
           $this->presmeruj("profil-dite/".$this->data["dite"]->id_rangera);
         }
       }
+  }
+
+  private function statistika($IDprofilu){
+    $schuzky = DB::vsechnySchuzky();
+    $prubeh = DB::statistikaDetiPrubehPoTydnech($IDprofilu);
+    $this->data["schuzky"] = $schuzky;
+    $this->data["prubeh"] = $prubeh;
+    $this->data["prumernaUcastSchuzky"] =round( DB::statistikaDetiPrumernaUcastNaSchuzkach($IDprofilu),0);
+    $this->data["pritomen"] = DB::statistikaDetiPritomen($IDprofilu);
+    $this->data["nepritomen"] = DB::statistikaDetiNepritomen($IDprofilu);
+    $this->data["omluvenaAbsence"] = round( DB::statistikaDetiOmluvenaAbsence($IDprofilu),0);
   }
 
 }

@@ -22,12 +22,12 @@
 </div>
 <div class="uk-width-3-5@l uk-width-1-1@m uk-margin-auto uk-padding-small uk-padding-remove-bottom">
   <div class="uk-width-1-1 uk-padding uk-padding-remove-horizontal uk-padding-remove-top">
-    <?php if ($streda === false) { ?>
-      <h1>Na středu <?= $stredaDatum ?>
+    <?php if ($den === false) { ?>
+      <h1>Na <?= $denSchuzky ?> <?= $datumSchuzky ?>
         nebyla přidána schůzka</h1>
       <a class="btn-blue" href="/schuzky/quick"><span uk-icon="icon: plus; ratio: 1"></span> Přidat</a>
     <?php } ?>
-    <?php if ($streda !== false) { ?>
+    <?php if ($den !== false) { ?>
       <h1>Nejbližší schůzka: <?= date_format(date_create($nejblizsiSchuzka[0]["datum"]), "j.n.") ?></h1>
       <?php
       $NejSchuzka = DB::nejblizsiSchuzka();
@@ -64,7 +64,8 @@
   <div class="uk-width-1-1 uk-padding uk-padding-remove-left uk-padding-remove-right uk-animation-slide-bottom-small">
     <div id="prechody" class="uk-padding-top">
       <div class="uk-child-width-expand@s" uk-grid>
-        <!-- <div>
+        <!--Work in progress -->
+        <!-- <div> 
           <?php if ($zadnePrechody) {
             ?><h3>Přechody mezi kmeny</h3> <?php
             foreach ($prechody as $n) { ?>

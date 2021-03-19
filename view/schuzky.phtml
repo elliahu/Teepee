@@ -1,7 +1,7 @@
 <div class="uk-width-1-1 uk-padding-small uk-paddin-remove-top uk-padding-remove-bottom">
   <h2>Přehled schůzek</h2>
   <a href="#pridat-schuzku" class="btn-orange" uk-toggle>Přidat schůzku</a>
-  <a href="/schuzky/quick" uk-tooltip="Jedním kliknutím přidá běžnou schůzku s datem nejbližší středy" class="btn-green" uk-toggle>Rychlé přidání
+  <a href="/schuzky/quick" uk-tooltip="Jedním kliknutím přidá běžnou schůzku s datem nejbližší schůzky" class="btn-green" uk-toggle>Rychlé přidání
     <?php
     if (date('l', strtotime('Today')) != $config->denSchuzky)
       echo date('d.n. Y', strtotime('next '.$config->denSchuzky));

@@ -1,15 +1,15 @@
-<!-- Skryje upozornění po 2.5 vteřinách -->
+<!-- Skryje upozornění po x vteřinách -->
 <script>
   $(document).ready(function() {
     setTimeout(function() {
       $('#alertbox').hide();
-    }, <?= $user_config->upozorneni->skrytPo ?> * 1000);
+    }, <?= $user_config->skrytUpozorneniPo ?> * 1000);
   });
 </script>
 <script src="/view/js/main.js"></script>
 
 
-
+<!-- work in progress -->
 <!-- Progressive webapp -->
 <script>
 window.addEventListener("load", () => {

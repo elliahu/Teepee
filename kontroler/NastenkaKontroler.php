@@ -21,19 +21,33 @@ class NastenkaKontroler extends Kontroler{
       $this->presmeruj("login");
     }
 
-    //Vrátí do pohledu dnešní datum
-    $this->data["datum"] = $this->dnesniDatum();
-    if(date("l",strtotime("Today")) != "Wednesday"){
-      $this->data["streda"] = DB::getSchuzkaPodleData(date("Y-m-d",strtotime("Next Wednesday")));
-      $this->data["stredaDatum"] = date("j.n.",strtotime("Next Wednesday"));
-      }
-    else{
-      $this->data["streda"] = DB::getSchuzkaPodleData(date("Y-m-d",strtotime("Today")));
-      $this->data["stredaDatum"] = date("j.n.",strtotime("Today"));
-    }
-    
     global $config;
     $this->data["config"] = $config;
+
+    //Vrátí do pohledu dnešní datum
+    $this->data["datum"] = $this->dnesniDatum();
+    $dny = array(
+      "Monday" => "pondělí",
+      "Tuesday" => "úterý",
+      "Wednesday" => "středu",
+      "Thursday" => "čtvrtek",
+      "Friday" => "pátek",
+      "Saturday" => "sobotu",
+      "Sunday" => "neděli"
+    );
+    $this->data["denSchuzky"] = $dny[$config->denSchuzky];
+    if(date("l",strtotime("Today")) != $config->denSchuzky){
+      $this->data["den"] = DB::getSchuzkaPodleData(date("Y-m-d",strtotime("Next $config->denSchuzky")));
+      $this->data["datumSchuzky"] = date("j.n.",strtotime("Next $config->denSchuzky"));
+      }
+    else{
+      $this->data["den"] = DB::getSchuzkaPodleData(date("Y-m-d",strtotime("Today")));
+      $this->data["datumSchuzky"] = date("j.n.",strtotime("Today"));
+    }
+
+
+    
+    
     
     ## Přechody mezi kmeny
     /* 
@@ -105,6 +119,7 @@ class NastenkaKontroler extends Kontroler{
   }
 
   private function navrhniKmen($soucasnyKmen,$vsechnyKmeny){
+    /* In progress */
     $i = 0;
     foreach($vsechnyKmeny as $kmen){
       if($kmen["id_kmenu"] == $soucasnyKmen)
@@ -118,6 +133,7 @@ class NastenkaKontroler extends Kontroler{
   }
 
   public function acronym($text){
+    /* Vytvoří acronym vety 'Abc Def' -> 'AD' */
     $words = explode(" ", $text);
     $acronym = "";
 
@@ -128,12 +144,14 @@ class NastenkaKontroler extends Kontroler{
   }
 
   private function prechodVsichni($kdo = array()){
+    /* Work in progress */
     foreach ($kdo as $x){
       DB::prechodMeziKmeny($x["id_rangera"],$x["navrhovanyKmen"]["id_kmenu"]);
     }
   }
 
   private function prechodJeden($kdo = array(),$id){
+    /* Work in progress */
     foreach($kdo as $x){
       if($x["id_rangera"] == $id){
         DB::prechodMeziKmeny($x["id_rangera"],$x["navrhovanyKmen"]["id_kmenu"]);

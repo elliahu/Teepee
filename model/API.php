@@ -93,8 +93,8 @@ class API{
 
                     case "OPTIONS":
                         $this->response->responseCode = 200;
-                        $this->response->responseMsg = "Podporované REQUEST METODY: GET pro získání dat ze servru 
-                        (možnost nastavit odmínku přidáním parametru 'condition' do url a vložením JSON objetku jako hodnotu tohot parametru)
+                        $this->response->responseMsg = "Podporované REQUEST METODY: GET pro získání dat ze serveru 
+                        (možnost nastavit podmínku přidáním parametru 'condition' do url a vložením JSON objetku jako hodnotu tohot parametru)
                         POST pro aktualizování dat na serveru (do těla requestu vložte JSON ve formátu {[{},{}]} ) nebo pro získání dat ze serveru PUT pro vložení dat na server  (do těla requestu vložte JSON ve formátu {[{},{}]} )
                         DELETE pro odstranení dat.";
                         $this->response->send();

@@ -124,14 +124,14 @@ class SchuzkyKontroler extends Kontroler{
 
   private function rychlaSchuzka(){
     global $config;
-    if(date('l', strtotime('Today')) != $config->schuzky->den){
-      $datum = date('Y-m-d', strtotime('next '.$config->schuzky->den))."";
+    if(date('l', strtotime('Today')) != $config->denSchuzky){
+      $datum = date('Y-m-d', strtotime('next '.$config->denSchuzky))."";
     }
     else{
       $datum = date('Y-m-d', strtotime('Today'))."";
     }
     if(DB::pridejSchuzkuRychle($datum,$_SESSION["uzivatel"]->id_vedouciho) != false){
-      $this->pridejZpravu("Schůzka byla přidána !","success");
+      $this->pridejZpravu("Schůzka $datum byla přidána !","success");
       $this->presmeruj("nastenka");
     }
     else{
