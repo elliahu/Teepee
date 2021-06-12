@@ -35,6 +35,7 @@
     //Zaloguje informaci o výjimce do syslogu
     DB::syslog($exception,"exception",(isset($_SESSION["uzivatel"]->id_vedouciho)) ? $_SESSION["uzivatel"]->id_vedouciho : 0);
     //Přesměruje na nástěnku
+    //Protože došlo k chybě v době inicializace routeru, nelze použít metodu Router->pridejZpravu()
     die("<script>window.location.href = '/nastenka';</script>");
   }
   
